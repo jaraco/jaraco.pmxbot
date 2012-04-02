@@ -8,12 +8,16 @@ setup_params = dict(
 	author="Jason R. Coombs",
 	author_email="jaraco@jaraco.com",
 	url="https://bitbucket.org/jaraco/jaraco.pmxbot",
+	description="pmxbot commands by jaraco",
 	packages=setuptools.find_packages(),
 	namespace_packages=['jaraco'],
 	zip_safe=False,
 	setup_requires=[
 		'hgtools',
 	],
+	entry_points = dict(
+		pmxbot_handlers='jaraco.pmxbot = jaraco.pmxbot',
+	),
 )
 if __name__ == '__main__':
 	setuptools.setup(**setup_params)
