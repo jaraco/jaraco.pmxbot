@@ -16,7 +16,10 @@ setup_params = dict(
 		'hgtools',
 	],
 	entry_points = dict(
-		pmxbot_handlers='jaraco.pmxbot = jaraco.pmxbot',
+		pmxbot_handlers=[
+			'jaraco.pmxbot = jaraco.pmxbot',
+			'http API = jaraco.pmxbot.http',
+		],
 	),
 )
 if __name__ == '__main__':
