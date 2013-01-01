@@ -24,7 +24,7 @@ def startup(*args, **kwargs):
 	config = {
 		'global': {
 			'server.socket_host': '::0',
-			'server.socket_port': os.environ.get('PORT', 8080),
+			'server.socket_port': int(os.environ.get('PORT', 8080)),
 		}
 	}
 	cherrypy.config.update(config)
