@@ -3,19 +3,46 @@ HTTP API endpoint for the bot.
 """
 
 import os
+import json
 
 import cherrypy
 import pmxbot.core
 
+
+class NewRelic(object):
+
+	@cherrypy.expose
+	def default(self, channel, **kwargs):
+		for key, value in kwargs.items():
+			handler = getattr(self, key, None)
+			if not handler: continue
+			value = json.loads(value)
+			Server.send_to(channel, handler(**value))
+		return "OK"
+
+	def alert(self, **kwargs):
+		return (
+			"Alert! [{application_name} {severity}] {message} ({alert_url})"
+			.format(**kwargs)
+		)
+
+
 class Server(object):
 	queue = []
 
+	new_relic = NewRelic()
+
+	@classmethod
+	def send_to(cls, channel, *msgs):
+		cls.queue.append(pmxbot.core.SwitchChannel(channel))
+		cls.queue.extend(msgs)
+
 	@cherrypy.expose
 	def default(self, channel):
-		self.queue.append(pmxbot.core.SwitchChannel(channel))
-		self.queue.extend(line.rstrip()
-			for line in cherrypy.request.body)
+		lines = (line.rstrip() for line in cherrypy.request.body)
+		self.send_to(channel, *lines)
 		return 'Message sent'
+
 
 @pmxbot.core.execdelay("startup", channel=None, howlong=0)
 def startup(*args, **kwargs):
