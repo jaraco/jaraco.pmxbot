@@ -26,11 +26,28 @@ class NewRelic(object):
 			.format(**kwargs)
 		)
 
+class Kiln(object):
+
+	@cherrypy.expose
+	def default(self, channel, payload):
+		payload = json.loads(payload)
+		Server.send_to(channel, self.format(**payload))
+		return "OK"
+
+	def format(self, commits, pusher, repository, **kwargs):
+		return (
+			"{pusher[fullName]} pushed {n_commits} commits "
+			"to {repository[name]} "
+			"({repository[url]}/History)".format(
+				n_commits=len(commits), **vars())
+		)
+
 
 class Server(object):
 	queue = []
 
 	new_relic = NewRelic()
+	kiln = Kiln()
 
 	@classmethod
 	def send_to(cls, channel, *msgs):
