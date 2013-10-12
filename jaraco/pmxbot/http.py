@@ -35,11 +35,12 @@ class Kiln(object):
 		return "OK"
 
 	def format(self, commits, pusher, repository, **kwargs):
+		commit_s = 'commit' if len(commits) == 1 else 'commits'
 		return (
-			"{pusher[fullName]} pushed {n_commits} commits "
+			"{pusher[fullName]} pushed {number} {what} "
 			"to {repository[name]} "
 			"({repository[url]})".format(
-				n_commits=len(commits), **vars())
+				number=len(commits), what=commit_s, **vars())
 		)
 
 
