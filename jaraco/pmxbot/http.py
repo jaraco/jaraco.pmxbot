@@ -38,7 +38,7 @@ class Kiln(object):
 		return (
 			"{pusher[fullName]} pushed {n_commits} commits "
 			"to {repository[name]} "
-			"({repository[url]}/History)".format(
+			"({repository[url]})".format(
 				n_commits=len(commits), **vars())
 		)
 
