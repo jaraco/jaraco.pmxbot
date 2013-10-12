@@ -31,17 +31,19 @@ class Kiln(object):
 	@cherrypy.expose
 	def default(self, channel, payload):
 		payload = json.loads(payload)
-		Server.send_to(channel, self.format(**payload))
+		Server.send_to(channel, *self.format(**payload))
 		return "OK"
 
 	def format(self, commits, pusher, repository, **kwargs):
 		commit_s = 'commit' if len(commits) == 1 else 'commits'
-		return (
+		yield (
 			"{pusher[fullName]} pushed {number} {what} "
 			"to {repository[name]} "
-			"({repository[url]})".format(
+			"({repository[url]}):".format(
 				number=len(commits), what=commit_s, **vars())
 		)
+		for commit in commits:
+			yield commit['message'].splitlines()[0]
 
 
 class Server(object):
