@@ -39,7 +39,7 @@ class Kiln(object):
 		yield (
 			"{pusher[fullName]} pushed {number} {what} "
 			"to {repository[name]} "
-			"({repository[url]}):".format(
+			"({repository[url]}) :".format(
 				number=len(commits), what=commit_s, **vars())
 		)
 		for commit in commits:
