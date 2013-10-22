@@ -19,6 +19,7 @@ setup_params = dict(
 		pmxbot_handlers=[
 			'jaraco.pmxbot = jaraco.pmxbot',
 			'http API = jaraco.pmxbot.http',
+			'notification = jaraco.pmxbot.notification',
 		],
 	),
 )
