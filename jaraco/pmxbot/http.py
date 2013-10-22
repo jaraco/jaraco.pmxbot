@@ -21,7 +21,7 @@ class Jenkins(object):
 	@cherrypy.tools.json_in()
 	def default(self, channel):
 		payload = cherrypy.request.json
-		Server.send_to(channel, *self.build_message(**payload))
+		Server.send_to(channel, *self.build_messages(**payload))
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
