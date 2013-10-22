@@ -4,10 +4,13 @@ HTTP API endpoint for the bot.
 
 import os
 import json
+import logging
 
 import cherrypy
 import pmxbot.core
 
+
+log = logging.getLogger(__name__)
 
 class Jenkins(object):
 	"""
@@ -21,6 +24,7 @@ class Jenkins(object):
 		Server.send_to(channel, self.build_message(**payload))
 
 	def build_message(self, name, url, build, **kwargs):
+		log.info("Got build from Jenkins: {build}".format(**vars()))
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
 		return tmpl.format(**vars())
 
