@@ -21,12 +21,14 @@ class Jenkins(object):
 	@cherrypy.tools.json_in()
 	def default(self, channel):
 		payload = cherrypy.request.json
-		Server.send_to(channel, self.build_message(**payload))
+		Server.send_to(channel, *self.build_message(**payload))
 
-	def build_message(self, name, url, build, **kwargs):
+	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
+		if not build.get('status') == 'FINISHED':
+			return
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
-		return tmpl.format(**vars())
+		yield tmpl.format(**vars())
 
 class NewRelic(object):
 
