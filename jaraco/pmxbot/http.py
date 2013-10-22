@@ -9,6 +9,21 @@ import cherrypy
 import pmxbot.core
 
 
+class Jenkins(object):
+	"""
+	Handle JSON notifications as sent from
+	https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
+	"""
+	@cherrypy.expose
+	@cherrypy.tools.json_in()
+	def default(self, channel):
+		payload = cherrypy.request.json
+		Server.send_to(channel, self.build_message(**payload))
+
+	def build_message(self, name, url, build, **kwargs):
+		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
+		return tmpl.format(**vars())
+
 class NewRelic(object):
 
 	@cherrypy.expose
