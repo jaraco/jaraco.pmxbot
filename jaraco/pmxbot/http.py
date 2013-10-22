@@ -66,6 +66,7 @@ class Server(object):
 
 	new_relic = NewRelic()
 	kiln = Kiln()
+	jenkins = Jenkins()
 
 	@classmethod
 	def send_to(cls, channel, *msgs):
