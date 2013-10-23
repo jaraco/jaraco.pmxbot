@@ -1,6 +1,6 @@
 import re
 
-import twilio
+import twilio.rest
 import pmxbot
 from pmxbot.core import command
 
