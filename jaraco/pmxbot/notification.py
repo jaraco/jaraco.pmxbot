@@ -17,12 +17,12 @@ def send_text(conn, event, channel, nick, rest):
 	return "Sent {count} chars to {number}".format(count=len(msg),
 		number=number)
 
-def parse_number(str):
+def parse_number(input_):
 	"""
 	Strip everything but digits and + sign; ensure it begins with a country
 	code.
 	"""
-	clean = ''.join(re.findall('[\d+]*'))
+	clean = ''.join(re.findall('[\d+]*', input_))
 	if not clean.startswith('+'):
 		clean = clean.lstrip('1')
 		clean = '+1' + clean
