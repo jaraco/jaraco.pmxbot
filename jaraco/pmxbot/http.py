@@ -25,7 +25,7 @@ class Jenkins(object):
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
-		if not build.get('status') == 'FINISHED':
+		if not build.get('phase') == 'FINISHED':
 			return
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
 		yield tmpl.format(**vars())
