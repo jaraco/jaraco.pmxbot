@@ -6,6 +6,7 @@ import os
 import json
 import logging
 
+from jaraco.util.itertools import always_iterable
 import cherrypy
 import pmxbot.core
 
@@ -66,6 +67,25 @@ class Kiln(object):
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
 
+class FogBugz(object):
+	@cherrypy.expose
+	def trigger(self, **params):
+		if params['CaseNumber']:
+			return self.handle_case(**params)
+		return "OK"
+
+	def handle_case(self, CaseNumber, ProjectName, EventType, StatusName,
+			**ignored):
+		log.info("Got case update from FogBugz: %s", vars())
+		channels = pmxbot.config.get('fogbugz channels', {})
+		if StatusName == 'CaseOpened':
+			base = "https://yougov.fogbugz.com"
+			base
+			message = "Opened {Title} ({base}/default.asp?{CaseNumber})"
+			matching_channels = channels.get(ProjectName)
+			for channel in always_iterable(matching_channels):
+				Server.send_to(channel, message.format(**vars()))
+
 
 class Server(object):
 	queue = []
@@ -73,6 +93,7 @@ class Server(object):
 	new_relic = NewRelic()
 	kiln = Kiln()
 	jenkins = Jenkins()
+	fogbugz = FogBugz()
 
 	@classmethod
 	def send_to(cls, channel, *msgs):
