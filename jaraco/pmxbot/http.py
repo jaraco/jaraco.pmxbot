@@ -74,15 +74,15 @@ class FogBugz(object):
 			return self.handle_case(**params)
 		return "OK"
 
-	def handle_case(self, CaseNumber, ProjectName, EventType, StatusName,
-			**ignored):
+	def handle_case(self, CaseNumber, ProjectName, EventType, **ignored):
 		log.info("Got case update from FogBugz: %s", vars())
-		channels = pmxbot.config.get('fogbugz channels', {})
-		if StatusName == 'CaseOpened':
+		channel_spec = pmxbot.config.get('fogbugz channels', {})
+		if EventType == 'CaseOpened':
 			base = "https://yougov.fogbugz.com"
 			base
 			message = "Opened {Title} ({base}/default.asp?{CaseNumber})"
-			matching_channels = channels.get(ProjectName)
+			default_channels = channel_spec.get('default', [])
+			matching_channels = channel_spec.get(ProjectName, default_channels)
 			for channel in always_iterable(matching_channels):
 				Server.send_to(channel, message.format(**vars()))
 
