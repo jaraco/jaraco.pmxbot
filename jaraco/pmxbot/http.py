@@ -67,6 +67,22 @@ class Kiln(object):
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
 
+class BitBucket(Kiln):
+	"""
+	BitBucket support is very similar to Kiln
+	"""
+
+	def format(self, commits, canon_url, repository, user, **kwargs):
+		commit_s = 'commit' if len(commits) == 1 else 'commits'
+		yield (
+			"{user} pushed {number} {what} "
+			"to {repository[name]} "
+			"({canon_url}{repository[absolute_url]}) :".format(
+				number=len(commits), what=commit_s, **vars())
+		)
+		for commit in commits:
+			yield commit['message'].splitlines()[0]
+
 class FogBugz(object):
 	@cherrypy.expose
 	def trigger(self, **params):
@@ -94,6 +110,7 @@ class Server(object):
 	kiln = Kiln()
 	jenkins = Jenkins()
 	fogbugz = FogBugz()
+	bitbucket = BitBucket()
 
 	@classmethod
 	def send_to(cls, channel, *msgs):
