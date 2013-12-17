@@ -73,6 +73,8 @@ class BitBucket(Kiln):
 	"""
 
 	def format(self, commits, canon_url, repository, user, **kwargs):
+		if not commits:
+			return
 		commit_s = 'commit' if len(commits) == 1 else 'commits'
 		yield (
 			"{user} pushed {number} {what} "
