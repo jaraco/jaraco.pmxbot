@@ -87,22 +87,22 @@ class BitBucket(Kiln):
 
 class FogBugz(object):
 	@cherrypy.expose
-	def trigger(self, **params):
-		if params['CaseNumber']:
-			return self.handle_case(**params)
+	def trigger(self, **event):
+		if event['CaseNumber']:
+			return self.handle_case(event)
 		return "OK"
 
-	def handle_case(self, CaseNumber, ProjectName, EventType, **ignored):
-		log.info("Got case update from FogBugz: %s", vars())
+	def handle_case(self, event):
+		log.info("Got case update from FogBugz: %s", event)
 		channel_spec = pmxbot.config.get('fogbugz channels', {})
-		if EventType == 'CaseOpened':
+		if event['EventType'] == 'CaseOpened':
 			base = "https://yougov.fogbugz.com"
-			base
 			message = "Opened {Title} ({base}/default.asp?{CaseNumber})"
+			proj = event['ProjectName']
 			default_channels = channel_spec.get('default', [])
-			matching_channels = channel_spec.get(ProjectName, default_channels)
+			matching_channels = channel_spec.get(proj, default_channels)
 			for channel in always_iterable(matching_channels):
-				Server.send_to(channel, message.format(**vars()))
+				Server.send_to(channel, message.format(base=base, **event))
 
 
 class Server(object):
