@@ -97,7 +97,7 @@ class FogBugz(object):
 		channel_spec = pmxbot.config.get('fogbugz channels', {})
 		if event['EventType'] == 'CaseOpened':
 			base = "https://yougov.fogbugz.com"
-			message = "Opened {Title} ({base}/default.asp?{CaseNumber})"
+			message = "{PersonEditingName} opened {Title} ({base}/default.asp?{CaseNumber})"
 			proj = event['ProjectName']
 			default_channels = channel_spec.get('default', [])
 			matching_channels = channel_spec.get(proj, default_channels)
