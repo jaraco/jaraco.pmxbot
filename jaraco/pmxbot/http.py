@@ -53,6 +53,7 @@ class Kiln(object):
 	@cherrypy.expose
 	def default(self, channel, payload):
 		payload = json.loads(payload)
+		log.info("Received payload with %s", payload)
 		Server.send_to(channel, *self.format(**payload))
 		return "OK"
 
