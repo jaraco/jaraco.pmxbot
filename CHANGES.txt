@@ -1,0 +1,7 @@
+2.0
+===
+
+FogBugz config key should now be "FogBugz channels".
+
+Jenkins HTTP endpoint now uses config to route messages to channels rather
+than requiring it in the URL. The new endpoint is simply "/jenkins".
