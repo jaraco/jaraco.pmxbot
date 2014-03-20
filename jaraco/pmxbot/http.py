@@ -5,6 +5,7 @@ HTTP API endpoint for the bot.
 import os
 import json
 import logging
+import abc
 
 from jaraco.util.itertools import always_iterable
 import cherrypy
@@ -86,7 +87,22 @@ class BitBucket(Kiln):
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
 
-class FogBugz(object):
+class ChannelSelector(object):
+	@abc.abstract_property
+	def channel_spec_config(self):
+		"""
+		The config attribute in the pmxbot.config where channels are specified
+		"""
+
+	def get_channels(self, key):
+		spec = pmxbot.config.get(self.channel_spec_config, {})
+		default_channels = spec.get('default', [])
+		matching_channels = spec.get(key, default_channels)
+		return always_iterable(matching_channels)
+
+class FogBugz(ChannelSelector):
+	channel_spec_config = 'fogbugz channels'
+
 	@cherrypy.expose
 	def trigger(self, **event):
 		if event['CaseNumber']:
@@ -95,14 +111,11 @@ class FogBugz(object):
 
 	def handle_case(self, event):
 		log.info("Got case update from FogBugz: %s", event)
-		channel_spec = pmxbot.config.get('fogbugz channels', {})
 		if event['EventType'] == 'CaseOpened':
 			base = "https://yougov.fogbugz.com"
 			message = "{PersonEditingName} opened {Title} ({base}/default.asp?{CaseNumber})"
 			proj = event['ProjectName']
-			default_channels = channel_spec.get('default', [])
-			matching_channels = channel_spec.get(proj, default_channels)
-			for channel in always_iterable(matching_channels):
+			for channel in self.get_channels(proj):
 				Server.send_to(channel, message.format(base=base, **event))
 
 
