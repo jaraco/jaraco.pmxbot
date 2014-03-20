@@ -13,16 +13,35 @@ import pmxbot.core
 
 log = logging.getLogger(__name__)
 
-class Jenkins(object):
+
+class ChannelSelector(object):
+	@property
+	def channel_spec_config(self):
+		"""
+		The config attribute in the pmxbot.config where channels are specified
+		"""
+		return '{self.__class__.__name__} channels'.format(**vars())
+
+	def get_channels(self, key):
+		spec = pmxbot.config.get(self.channel_spec_config, {})
+		default_channels = spec.get('default', [])
+		matching_channels = spec.get(key, default_channels)
+		return always_iterable(matching_channels)
+
+class Jenkins(ChannelSelector):
 	"""
 	Handle JSON notifications as sent from
 	https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
 	"""
 	@cherrypy.expose
 	@cherrypy.tools.json_in()
-	def default(self, channel):
+	def default(self, channel=None):
+		# retained for compatibility
+		del channel
 		payload = cherrypy.request.json
-		Server.send_to(channel, *self.build_messages(**payload))
+		job = payload['name']
+		for channel in self.get_channels(job):
+			Server.send_to(channel, *self.build_messages(**payload))
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
@@ -85,20 +104,6 @@ class BitBucket(Kiln):
 		)
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
-
-class ChannelSelector(object):
-	@property
-	def channel_spec_config(self):
-		"""
-		The config attribute in the pmxbot.config where channels are specified
-		"""
-		return '{self.__class__.__name__} channels'.format(**vars())
-
-	def get_channels(self, key):
-		spec = pmxbot.config.get(self.channel_spec_config, {})
-		default_channels = spec.get('default', [])
-		matching_channels = spec.get(key, default_channels)
-		return always_iterable(matching_channels)
 
 class FogBugz(ChannelSelector):
 	@cherrypy.expose
