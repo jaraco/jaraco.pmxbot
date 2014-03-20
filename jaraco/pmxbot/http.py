@@ -5,7 +5,6 @@ HTTP API endpoint for the bot.
 import os
 import json
 import logging
-import abc
 
 from jaraco.util.itertools import always_iterable
 import cherrypy
@@ -88,11 +87,12 @@ class BitBucket(Kiln):
 			yield commit['message'].splitlines()[0]
 
 class ChannelSelector(object):
-	@abc.abstract_property
+	@property
 	def channel_spec_config(self):
 		"""
 		The config attribute in the pmxbot.config where channels are specified
 		"""
+		return '{self.__class__.__name__} channels'.format(**vars())
 
 	def get_channels(self, key):
 		spec = pmxbot.config.get(self.channel_spec_config, {})
@@ -101,8 +101,6 @@ class ChannelSelector(object):
 		return always_iterable(matching_channels)
 
 class FogBugz(ChannelSelector):
-	channel_spec_config = 'fogbugz channels'
-
 	@cherrypy.expose
 	def trigger(self, **event):
 		if event['CaseNumber']:
