@@ -1,3 +1,11 @@
+3.0
+===
+
+Kiln and BitBucket now also use the ChannelSelector. Therefore, clients
+should be updated not to pass the channel, and instead just specify the
+endpoint (i.e. http://my.pmxbot/kiln or /bitbucket). Furthermore, the channel
+routing should be specified in the config based on the repository name.
+
 2.0
 ===
 

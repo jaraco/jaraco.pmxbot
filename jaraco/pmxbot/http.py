@@ -67,13 +67,14 @@ class NewRelic(object):
 			.format(**kwargs)
 		)
 
-class Kiln(object):
+class Kiln(ChannelSelector):
 
 	@cherrypy.expose
-	def default(self, channel, payload):
+	def default(self, payload):
 		payload = json.loads(payload)
 		log.info("Received payload with %s", payload)
-		Server.send_to(channel, *self.format(**payload))
+		for channel in self.get_channels(payload['repository']['name']):
+			Server.send_to(channel, *self.format(**payload))
 		return "OK"
 
 	def format(self, commits, pusher, repository, **kwargs):
