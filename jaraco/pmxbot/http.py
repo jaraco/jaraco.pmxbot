@@ -138,7 +138,6 @@ class Server(object):
 		cls.queue.extend(msgs)
 
 	@cherrypy.expose
-	@cherrypy.tools.decode()
 	def default(self, channel):
 		lines = (line.rstrip() for line in cherrypy.request.body)
 		self.send_to(channel, *lines)
