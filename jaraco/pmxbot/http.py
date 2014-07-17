@@ -5,6 +5,7 @@ HTTP API endpoint for the bot.
 import os
 import json
 import logging
+import codecs
 
 from jaraco.util.itertools import always_iterable
 import cherrypy
@@ -123,6 +124,19 @@ class FogBugz(ChannelSelector):
 				Server.send_to(channel, message.format(base=base, **event))
 
 
+def actually_decode():
+	"""
+	CherryPy decode tool doesn't actually decode anything unless the body
+	is multipart. This tool is different and will decode the body.
+	"""
+	# assume UTF-8 and to hell with the specs
+	dec = codecs.getincrementaldecoder('utf-8')()
+	cherrypy.request.body = map(dec.decode, cherrypy.request.body)
+
+adt = cherrypy.Tool('before_handler', actually_decode)
+cherrypy.tools.actually_decode = adt
+
+
 class Server(object):
 	queue = []
 
@@ -138,6 +152,7 @@ class Server(object):
 		cls.queue.extend(msgs)
 
 	@cherrypy.expose
+	@cherrypy.tools.actually_decode()
 	def default(self, channel):
 		lines = (line.rstrip() for line in cherrypy.request.body)
 		self.send_to(channel, *lines)
