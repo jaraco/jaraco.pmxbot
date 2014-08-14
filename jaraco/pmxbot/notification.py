@@ -4,8 +4,11 @@ import twilio.rest
 import pmxbot
 from pmxbot.core import command
 
-@command('send_text')
+@command()
 def send_text(conn, event, channel, nick, rest):
+	"""
+	Send an SMS message: pass the phone number and message to send.
+	"""
 	account = pmxbot.config.twilio_account
 	token = pmxbot.config.twilio_token
 	number, _, msg = rest.partition(' ')
@@ -21,6 +24,13 @@ def parse_number(input_):
 	"""
 	Strip everything but digits and + sign; ensure it begins with a country
 	code.
+
+	>>>> parse_number('5555551212')
+	'+15555551212'
+	>>> parse_number('12025551212')
+	'+12025551212'
+	>>> parse_number('+44')
+	'+44'
 	"""
 	clean = ''.join(re.findall('[\d+]*', input_))
 	if not clean.startswith('+'):
