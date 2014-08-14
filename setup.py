@@ -18,9 +18,6 @@ setup_params = dict(
 	packages=setuptools.find_packages(),
 	namespace_packages=['jaraco'],
 	zip_safe=False,
-	setup_requires=[
-		'hgtools',
-	],
 	entry_points = dict(
 		pmxbot_handlers=[
 			'jaraco.pmxbot = jaraco.pmxbot',
@@ -28,6 +25,17 @@ setup_params = dict(
 			'notification = jaraco.pmxbot.notification',
 		],
 	),
+	install_requires=[
+		'twilio',
+	],
+	setup_requires=[
+		'hgtools',
+		'pytest-runner',
+	],
+	tests_require=[
+		'pytest',
+		'pmxbot',
+	],
 )
 if __name__ == '__main__':
 	setuptools.setup(**setup_params)

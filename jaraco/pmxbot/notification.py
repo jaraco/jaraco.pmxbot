@@ -25,7 +25,7 @@ def parse_number(input_):
 	Strip everything but digits and + sign; ensure it begins with a country
 	code.
 
-	>>>> parse_number('5555551212')
+	>>> parse_number('5555551212')
 	'+15555551212'
 	>>> parse_number('12025551212')
 	'+12025551212'
