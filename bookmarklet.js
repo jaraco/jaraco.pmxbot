@@ -41,7 +41,7 @@ javascript:(
             o.appendChild(d);
             document.body.style.overflow = "hidden";
             var f=document.createElement("form"),
-                s=document.createElement("button"),
+                s=document.createElement("input"),
                 c=document.createElement("input");
             s.setAttribute("type","submit");
             c.setAttribute("type","button");
@@ -49,9 +49,9 @@ javascript:(
             var n= "margin:.5em;width:42.5%;cursor:pointer;padding:.5em;";
             s.setAttribute("style","background:#5dc251;border:0;box-shadow:0 3px 0 #409936;color:#dbf0df;"+n+t);
             c.setAttribute("style","background:#f66;border:0;box-shadow:0 3px 0 #e01414;color:#fcc;"+n+t);
-            s.innerHTML += "Submit"; //need to fix
+            s.setAttribute("value", "Submit");
             c.setAttribute("value", "Cancel");
-            f.style.marginBottom="0";
+            f.setAttribute("style", "margin-bottom:0");
             f.appendChild(s);
             f.appendChild(c);
             d.appendChild(f);
