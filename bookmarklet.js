@@ -34,15 +34,14 @@ javascript: (
             disable_scroll();
             var d = document.createElement("div"),
                 o = document.createElement("div");
-            o.setAttribute("style", "position:absolute;width:100%;background-color:rgba(0,0,0,.5);z-index:2147483647;text-align:centerl");
+            o.setAttribute("style", "position:absolute;width:100%;background-color:rgba(0,0,0,.5);z-index:2147483647;text-align:center");
             o.id = "pmxover";
             o.style.height = window.innerHeight + "px";
             o.style.top = window.scrollY + "px";
             o.style.left = window.scrollX + "px";
             var st = "padding:1em;background:#fff;border:1px #ccc solid;margin:.5em;width:90%;border-radius:0;",
-                t = "font-family:Helvetica,Arial;",
-                n = "margin:.5em;width:42.5%;cursor:pointer;padding:.5em;";
-            d.setAttribute("style", "background-color:#eee;padding:1em;text-align:center;width:25em;position:relative;top:50%;transform:translateY(-50%);margin:auto;box-shadow:0 0 30px #555;border-radius:0.25em;" + t);
+                t = "text-align:center;font-family:Helvetica,Arial;";
+            d.setAttribute("style", t + "background-color:#eee;padding: 1em;width:25em;position:relative;top:50%;transform:translateY(-50%);margin:auto;box-shadow:0 0 30px #555;border-radius:0.25em;");
             o.appendChild(d);
             document.body.appendChild(o);
             document.body.style.overflow = "hidden";
@@ -51,9 +50,10 @@ javascript: (
                 c = document.createElement("input");
             s.setAttribute("type", "submit");
             c.setAttribute("type", "button");
-            f.innerHTML = "<span style='font-size:2em;float:left;padding-left:.2em;color:#666;'>pmxbot</span><input id='pmxchn' placeholder='Channel' style='" + st + t + "'><br><input id='pmxmsg' placeholder='Message' style='" + st + t + "'>";
-            s.setAttribute("style", "background:#5dc251;border:0;box-shadow:0 3px 0 #409936;color:#dbf0df;" + n + t);
-            c.setAttribute("style", "background:#f66;border:0;box-shadow:0 3px 0 #e01414;color:#fcc;" + n + t);
+            f.innerHTML = "<span style='font-size:2em;float:left;padding-left:.2em;color:#666;'>pmxbot</span><input id='pmxchn' placeholder='Channel' style='" + t + st + "'><br><input id='pmxmsg' placeholder='Message' style='" + t + st + "' value='"+document.URL+"'>";
+            var q = "all:initial;margin:.5em;width:42.5%;cursor:pointer;padding:.5em 0;";
+            s.setAttribute("style", q + t + "background:#5dc251;border:0;box-shadow:0 3px 0 #409936;color:#dbf0df");
+            c.setAttribute("style", q + t + "background:#f66;border:0;box-shadow:0 3px 0 #e01414;color:#fcc");
             s.setAttribute("value", "Submit");
             c.setAttribute("value", "Cancel");
             f.style.marginBottom = "0";
