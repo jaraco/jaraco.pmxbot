@@ -73,9 +73,6 @@ javascript: (
                     data = document.getElementById("pmxmsg").value;
                 xmlhttp.open("POST", base_url + channel, true);
                 xmlhttp.setRequestHeader("Content-type", "text/plain");
-                xmlhttp.setRequestHeader("Host", base_url);
-                xmlhttp.setRequestHeader("Content-length", data.length);
-                xmlhttp.setRequestHeader("Connection", "close");
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState === 4) {
                         if (xmlhttp.status === 200) {
