@@ -29,7 +29,7 @@ javascript: (
                 window.removeEventListener("DOMMouseScroll", wheel);
                 window.removeEventListener("keydown", keydown);
             }
-            var base_url = "";
+            var base_url = "http://ircbot.example.com/";
             window.pmxbot = true;
             disable_scroll();
             var d = document.createElement("div"),
@@ -68,20 +68,23 @@ javascript: (
             f.addEventListener("submit", function(e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
-                alert("Submitting");
-                var xmlhttp = new XMLHttpRequest();
+                var xmlhttp = new XMLHttpRequest(),
+                    channel = document.getElementById("pmxchn").value,
+                    data = document.getElementById("pmxmsg").value;
+                xmlhttp.open("POST", base_url + "/" + channel, true);
                 xmlhttp.setRequestHeader("Content-type", "text/plain");
-                xmlhttp.open("POST", base_url + document.getElementById("pmxchn").value, true);
-                xmlhttp.send(document.getElementById("pmxmsg").value);
-                xmlhttp.onload = function() {
-                    if (xmlhttp.status === 200) {
-                        alert("Success!");
-                        closeModal();
-                    } else alert("Err: Received Code: " + xmlhttp.status);
+                xmlhttp.setRequestHeader("Host", base_url);
+                xmlhttp.setRequestHeader("Content-length", data.length);
+                xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState === 4) {
+                        if (xmlhttp.status === 200) {
+                            alert("Success!");
+                            closeModal();
+                        } else alert("Err: Received Code: " + xmlhttp.status);
+                    }
                 };
-                xmlhttp.onerror = function() {
-                    alert("POST Failed");
-                };
+                xmlhttp.send(data);
             });
             o.addEventListener("click", function(e) {
                 e.stopImmediatePropagation();
