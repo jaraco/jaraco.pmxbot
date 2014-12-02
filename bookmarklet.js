@@ -3,13 +3,13 @@ javascript: (
         if (!window.pmxbot) {
             function closeModal() {
                 document.body.style.overflow = "initial";
-                document.getElementById("pmxover").parentNode.removeChild(document.getElementById("pmxover"));
+                o.parentNode.removeChild(o);
                 window.pmxbot = false;
                 enable_scroll();
             }
 
             function keydown(e) {
-                if (e.which > 32 && e.which < 41) {
+                if (e.which > 31 && e.which < 41 && e.target === document.body) {
                     e.preventDefault();
                     e.stopImmediatePropagation();
                 }
@@ -49,7 +49,6 @@ javascript: (
                 c = document.createElement("input");
             s.setAttribute("type", "submit");
             c.setAttribute("type", "button");
-            f.id = "pmxform";
             f.innerHTML = "<span style='font-size:2em;float:left;padding-left:.2em;color:#666'>pmxbot</span><input id='pmxchn' placeholder='Channel' style='" + st + t + "'><br><input id='pmxmsg' placeholder='Message' style='" + st + t + "'>";
             var n = "margin:.5em;width:42.5%;cursor:pointer;padding:.5em;";
             s.setAttribute("style", "background:#5dc251;border:0;box-shadow:0 3px 0 #409936;color:#dbf0df;" + n + t);
