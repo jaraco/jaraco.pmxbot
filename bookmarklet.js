@@ -3,7 +3,7 @@ javascript:(
         if(!window.pmxbot){
             function closeModal(){
                 document.body.style.overflow = "initial";
-                o.style.display = "none";
+                document.getElementById("pmxover").parentNode.removeChild(document.getElementById("pmxover"));
                 window.pmxbot = false;
                 enable_scroll();
             }
@@ -24,11 +24,11 @@ javascript:(
                 window.removeEventListener("DOMMouseScroll", wheel);
                 window.removeEventListener("keydown", keydown);
             }
+            var base_url = "";
             window.pmxbot = true;
             disable_scroll();
-            var base_url = "";
             var d=document.createElement("div"),
-            o = document.createElement("div");
+                o = document.createElement("div");
             o.setAttribute("style","position:absolute;width:100%;background-color:rgba(0,0,0,.5);z-index:2147483647;text-align:center");
             o.id="pmxover";
             o.style.height = window.innerHeight+"px";
@@ -45,7 +45,7 @@ javascript:(
                 c=document.createElement("input");
             s.setAttribute("type","submit");
             c.setAttribute("type","button");
-            f.innerHTML = "<span style='font-size:2em;float:left;padding-left:.2em;color:#666'>pmxbot</span><input id='pmxmsg' placeholder='Message' style='"+st+t+"' autofocus><br><input id='pmxchn' placeholder='Channel' style='"+st+t+"'>";
+            f.innerHTML = "<span style='font-size:2em;float:left;padding-left:.2em;color:#666'>pmxbot</span><input id='pmxchn' placeholder='Channel' style='"+st+t+"'><br><input id='pmxmsg' placeholder='Message' style='"+st+t+"'>";
             var n= "margin:.5em;width:42.5%;cursor:pointer;padding:.5em;";
             s.setAttribute("style","background:#5dc251;border:0;box-shadow:0 3px 0 #409936;color:#dbf0df;"+n+t);
             c.setAttribute("style","background:#f66;border:0;box-shadow:0 3px 0 #e01414;color:#fcc;"+n+t);
@@ -57,14 +57,14 @@ javascript:(
             d.appendChild(f);
             document.getElementById("pmxmsg").focus();
             document.getElementById("pmxchn").value=localStorage.getItem("strchn")||"";
-            document.getElementById("pmxchn").addEventListener("change", function(){
+            document.getElementById("pmxchn").addEventListener("keyup", function(){
                 if (this.value)
                     localStorage.setItem("strchn", this.value);
             });
             f.addEventListener("submit", function(e){
                 e.stopImmediatePropagation();
                 e.preventDefault();
-                alert("Submitting"); //TMP
+                alert("Submitting");
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.setRequestHeader("Content-type","text/plain");
                 xmlhttp.open("POST", base_url + document.getElementById("pmxchn").value, true);
