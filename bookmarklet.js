@@ -7,24 +7,20 @@ javascript: (
                 window.pmxbot = false;
                 enable_scroll();
             }
-
             function keydown(e) {
                 if (e.which > 31 && e.which < 41 && e.target === document.body) {
                     e.preventDefault();
                     e.stopImmediatePropagation();
                 }
             }
-
             function wheel(e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
             }
-
             function disable_scroll() {
                 window.addEventListener("DOMMouseScroll", wheel);
                 window.addEventListener("keydown", keydown);
             }
-
             function enable_scroll() {
                 window.removeEventListener("DOMMouseScroll", wheel);
                 window.removeEventListener("keydown", keydown);
