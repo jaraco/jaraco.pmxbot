@@ -16,7 +16,8 @@ javascript: (
             }
 
             function wheel(e) {
-                e.preventDefault;
+                e.preventDefault();
+                e.stopImmediatePropagation();
             }
 
             function disable_scroll() {
