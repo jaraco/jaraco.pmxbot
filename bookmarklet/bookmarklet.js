@@ -25,7 +25,7 @@ javascript: (
                 window.removeEventListener("DOMMouseScroll", wheel);
                 window.removeEventListener("keydown", keydown);
             }
-            var base_url = "http://ircbot.example.com/";
+            var base_url = "//ircbot.example.com/";
             window.pmxbot = true;
             disable_scroll();
             var d = document.createElement("div"),
