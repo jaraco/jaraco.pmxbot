@@ -10,6 +10,7 @@ import codecs
 from jaraco.util.itertools import always_iterable
 import cherrypy
 import pmxbot.core
+import cherrypy_cors
 
 
 log = logging.getLogger(__name__)
@@ -163,13 +164,17 @@ class Server(object):
 def startup(*args, **kwargs):
 	if not pmxbot.config.get('web api', False):
 		return
+	cherrypy_cors.install()
 	config = {
 		'global': {
 			'server.socket_host': '::0',
 			'server.socket_port': int(os.environ.get('PORT', 8080)),
 			'environment': 'production',
 			'log.screen': False,
-		}
+		},
+		'/': {
+			'cors.expose_public.on': True,
+		},
 	}
 	cherrypy.config.update(config)
 	cherrypy.tree.mount(Server(), '', config)
