@@ -72,7 +72,6 @@ javascript: (
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState === 4) {
                         if (xmlhttp.status === 200) {
-                            alert("Success!");
                             closeModal();
                         } else alert("Err: Received Code: " + xmlhttp.status);
                     }
