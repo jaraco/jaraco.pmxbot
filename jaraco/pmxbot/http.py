@@ -165,6 +165,14 @@ class Server(object):
 		"""
 		Render the bookmarklet for easy installation.
 		"""
+		return self.render_bookmarklet()
+
+	@staticmethod
+	def render_bookmarklet():
+		"""
+		>>> cherrypy.request.headers['Host'] = 'pmxbot.example.com'
+		>>> Server.render_bookmarklet()
+		"""
 		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
 		script = script.decode('utf-8')
 		hostname = cherrypy.request.headers['Host']
