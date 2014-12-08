@@ -7,6 +7,7 @@ import json
 import logging
 import codecs
 import textwrap
+import urllib.parse
 
 import pkg_resources
 from jaraco.util.itertools import always_iterable
@@ -178,13 +179,14 @@ class Server(object):
 		"""
 		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
 		script = script.decode('utf-8')
+		script_href = urllib.parse.urlencode(script)
 		hostname = cherrypy.request.headers['Host']
 		script = script.replace('ircbot.example.com', hostname)
 		tmpl = textwrap.dedent("""
 			<html>
 			<head></head>
 			<body>
-				Here is your <a href="{script}">bookmarklet</a>.
+				Here is your <a href="{script_href}">bookmarklet</a>.
 			</body>
 			</html>
 			""")
