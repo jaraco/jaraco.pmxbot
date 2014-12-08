@@ -176,12 +176,14 @@ class Server(object):
 		>>> bm = Server.render_bookmarklet()
 		>>> 'pmxbot.example.com' in bm
 		True
+		>>> '%20' in bm
+		True
 		"""
 		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
 		script = script.decode('utf-8')
-		script_href = urllib.parse.urlencode(script)
 		hostname = cherrypy.request.headers['Host']
 		script = script.replace('ircbot.example.com', hostname)
+		script_href = urllib.parse.quote(script)
 		tmpl = textwrap.dedent("""
 			<html>
 			<head></head>
