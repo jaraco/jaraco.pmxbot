@@ -178,17 +178,21 @@ class Server(object):
 		True
 		>>> '%20' in bm
 		True
+		>>> 'href="javascript:' in bm
+		True
 		"""
 		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
-		script = script.decode('utf-8')
+		script = script.decode('utf-8').strip()
 		hostname = cherrypy.request.headers['Host']
 		script = script.replace('ircbot.example.com', hostname)
 		script_href = urllib.parse.quote(script)
+		script_href = script_href.replace('javascript%3A', 'javascript:')
 		tmpl = textwrap.dedent("""
 			<html>
 			<head></head>
 			<body>
-				Here is your <a href="{script_href}">bookmarklet</a>.
+				Here is your bookmarklet:
+				<a href="{script_href}">Send to IRC</a>.
 			</body>
 			</html>
 			""")
