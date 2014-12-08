@@ -172,7 +172,9 @@ class Server(object):
 	def render_bookmarklet():
 		"""
 		>>> cherrypy.request.headers['Host'] = 'pmxbot.example.com'
-		>>> Server.render_bookmarklet()
+		>>> bm = Server.render_bookmarklet()
+		>>> 'pmxbot.example.com' in bm
+		True
 		"""
 		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
 		script = script.decode('utf-8')
