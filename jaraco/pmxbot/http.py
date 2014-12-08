@@ -6,6 +6,7 @@ import os
 import json
 import logging
 import codecs
+import textwrap
 
 import pkg_resources
 from jaraco.util.itertools import always_iterable
