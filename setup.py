@@ -17,6 +17,7 @@ setup_params = dict(
 	long_description = readme + '\n\n' + changes,
 	packages=setuptools.find_packages(),
 	namespace_packages=['jaraco'],
+	include_package_data=True,
 	zip_safe=False,
 	entry_points = dict(
 		pmxbot_handlers=[
