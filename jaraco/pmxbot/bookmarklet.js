@@ -1,4 +1,4 @@
-javascript: (
+(
     function() {
         if (!window.pmxbot) {
             function closeModal() {

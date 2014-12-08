@@ -185,8 +185,7 @@ class Server(object):
 		script = script.decode('utf-8').strip()
 		hostname = cherrypy.request.headers['Host']
 		script = script.replace('ircbot.example.com', hostname)
-		script_href = urllib.parse.quote(script)
-		script_href = script_href.replace('javascript%3A', 'javascript:')
+		script_href = 'javascript:' + urllib.parse.quote(script)
 		tmpl = textwrap.dedent("""
 			<html>
 			<head></head>
