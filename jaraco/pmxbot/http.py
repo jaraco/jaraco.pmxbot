@@ -7,6 +7,7 @@ import json
 import logging
 import codecs
 
+import pkg_resources
 from jaraco.util.itertools import always_iterable
 import cherrypy
 import pmxbot.core
@@ -158,6 +159,25 @@ class Server(object):
 		lines = (line.rstrip() for line in cherrypy.request.body)
 		self.send_to(channel, *lines)
 		return 'Message sent'
+
+	@cherrypy.expose
+	def bookmarklet(self):
+		"""
+		Render the bookmarklet for easy installation.
+		"""
+		script = pkg_resources.resource_string(__name__, 'bookmarklet-min.js')
+		script = script.decode('utf-8')
+		hostname = cherrypy.request.headers['Host']
+		script = script.replace('ircbot.example.com', hostname)
+		tmpl = textwrap.dedent("""
+			<html>
+			<head></head>
+			<body>
+				Here is your <a href="{script}">bookmarklet</a>.
+			</body>
+			</html>
+			""")
+		return tmpl.format_map(locals())
 
 
 @pmxbot.core.execdelay("startup", channel=None, howlong=0)
