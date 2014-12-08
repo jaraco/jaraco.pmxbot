@@ -28,6 +28,7 @@ setup_params = dict(
 	),
 	install_requires=[
 		'twilio',
+		'cherrypy_cors',
 	],
 	setup_requires=[
 		'hgtools',
