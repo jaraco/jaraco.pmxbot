@@ -132,14 +132,17 @@ class Velociraptor(ChannelSelector):
 	@cherrypy.expose
 	@cherrypy.tools.json_in()
 	def default(self):
-		payload = cherrypy.request.json
-		log.info("Received payload with %s", payload)
-		for channel in self.get_channels(payload['swarm']):
-			Server.send_to(channel, *self.format(**payload))
+		event = cherrypy.request.json
+		log.info("Received event with %s", event)
+		if 'route' not in event['tags']:
+			return
+		swarm = event['title']
+		for channel in self.get_channels(swarm):
+			Server.send_to(channel, *self.format(**event))
 		return "OK"
 
-	def format(self, swarm, **ignored):
-		yield "Routed {swarm}".format(**locals())
+	def format(self, title, **ignored):
+		yield "Routed {title}".format(**locals())
 
 
 def actually_decode():
