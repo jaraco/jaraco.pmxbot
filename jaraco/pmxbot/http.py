@@ -137,7 +137,8 @@ class Velociraptor(ChannelSelector):
 		if 'route' not in event['tags']:
 			return
 		swarm = event['title']
-		for channel in self.get_channels(swarm):
+		app, sep, rest = swarm.partition('-')
+		for channel in self.get_channels(app):
 			Server.send_to(channel, *self.format(**event))
 		return "OK"
 
