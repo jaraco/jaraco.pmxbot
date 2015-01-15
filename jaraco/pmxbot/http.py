@@ -128,6 +128,20 @@ class FogBugz(ChannelSelector):
 				Server.send_to(channel, message.format(base=base, **event))
 
 
+class Velociraptor(ChannelSelector):
+	@cherrypy.expose
+	@cherrypy.tools.json_in()
+	def default(self):
+		payload = cherrypy.request.json
+		log.info("Received payload with %s", payload)
+		for channel in self.get_channels(payload['swarm']):
+			Server.send_to(channel, *self.format(**payload))
+		return "OK"
+
+	def format(self, swarm, **ignored):
+		yield "Routed {swarm}".format(**locals())
+
+
 def actually_decode():
 	"""
 	CherryPy decode tool doesn't actually decode anything unless the body
@@ -149,6 +163,7 @@ class Server(object):
 	jenkins = Jenkins()
 	fogbugz = FogBugz()
 	bitbucket = BitBucket()
+	velociraptor = Velociraptor()
 
 	@classmethod
 	def send_to(cls, channel, *msgs):
