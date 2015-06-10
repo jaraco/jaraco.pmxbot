@@ -10,7 +10,7 @@ import textwrap
 import urllib.parse
 
 import pkg_resources
-from jaraco.util.itertools import always_iterable
+from jaraco.itertools import always_iterable
 import cherrypy
 import pmxbot.core
 import cherrypy_cors

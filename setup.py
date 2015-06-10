@@ -29,6 +29,7 @@ setup_params = dict(
 	install_requires=[
 		'twilio',
 		'cherrypy_cors',
+		'jaraco.itertools',
 	],
 	setup_requires=[
 		'hgtools',
