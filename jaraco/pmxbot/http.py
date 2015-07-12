@@ -95,8 +95,30 @@ class Kiln(ChannelSelector):
 
 class BitBucket(Kiln):
 	"""
-	BitBucket support is very similar to Kiln
+	Bitbucket has two models, the webhooks and the legacy POST service.
+	Legacy POST support is very similar to Kiln, so let its default
+	method handle that.
 	"""
+
+	@cherrypy.expose
+	@cherrypy.tools.json_in()
+	def index(self):
+		payload = cherrypy.request.json
+		log.info("Received Bitbucket webhook %s", payload)
+		user = payload['actor']['display_name']
+		canon_url = ''
+		repository = dict(
+			name=payload['repository']['name'],
+			absolute_url=payload['repository']['links']['html'],
+		)
+		commits = [
+			dict(message=change['new']['target'])
+			for change in payload['push']['changes']
+			if change['new'] is not None
+		]
+		for channel in self.get_channels(payload['repository']['name']):
+			messages = self.format(**locals())
+			Server.send_to(channel, *messages)
 
 	def format(self, commits, canon_url, repository, user, **kwargs):
 		if not commits:
