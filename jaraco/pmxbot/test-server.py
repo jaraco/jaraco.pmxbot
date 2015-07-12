@@ -3,7 +3,6 @@ import pmxbot
 
 from jaraco.pmxbot import http
 
-pmxbot.config['BitBucket channels'] = dict(default='default')
 
 @classmethod
 def send_to(cls, channel, *msgs):
@@ -11,8 +10,9 @@ def send_to(cls, channel, *msgs):
 	for msg in msgs:
 		print(msg)
 
-http.Server.send_to = send_to
 
 if __name__ == '__main__':
+	pmxbot.config['BitBucket channels'] = dict(default='default')
+	http.Server.send_to = send_to
 	http.Server.start(log_screen=True)
 	cherrypy.engine.block()
