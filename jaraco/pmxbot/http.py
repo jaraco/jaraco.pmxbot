@@ -238,26 +238,30 @@ class Server(object):
 			""")
 		return tmpl.format_map(locals())
 
+	@classmethod
+	def start(cls):
+		cherrypy_cors.install()
+		config = {
+			'global': {
+				'server.socket_host': '::0',
+				'server.socket_port': int(os.environ.get('PORT', 8080)),
+				'environment': 'production',
+				'log.screen': False,
+			},
+			'/': {
+				'cors.expose_public.on': True,
+			},
+		}
+		cherrypy.config.update(config)
+		cherrypy.tree.mount(cls(), '', config)
+		cherrypy.engine.start()
+
 
 @pmxbot.core.execdelay("startup", channel=None, howlong=0)
 def startup(*args, **kwargs):
 	if not pmxbot.config.get('web api', False):
 		return
-	cherrypy_cors.install()
-	config = {
-		'global': {
-			'server.socket_host': '::0',
-			'server.socket_port': int(os.environ.get('PORT', 8080)),
-			'environment': 'production',
-			'log.screen': False,
-		},
-		'/': {
-			'cors.expose_public.on': True,
-		},
-	}
-	cherrypy.config.update(config)
-	cherrypy.tree.mount(Server(), '', config)
-	cherrypy.engine.start()
+	Server.start()
 	pmxbot.core.FinalRegistry.at_exit(cherrypy.engine.stop)
 
 @pmxbot.core.execdelay("http", channel=None, howlong=0.3, repeat=True)
