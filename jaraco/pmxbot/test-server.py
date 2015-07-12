@@ -5,12 +5,14 @@ from jaraco.pmxbot import http
 
 pmxbot.config['BitBucket channels'] = dict(default='default')
 
-class Server(http.Server):
-	def send_to(self, channel, *msgs):
-		print("Message for", channel)
-		for msg in msgs:
-			print(msg)
+@classmethod
+def send_to(cls, channel, *msgs):
+	print("Message for", channel)
+	for msg in msgs:
+		print(msg)
+
+http.Server.send_to = send_to
 
 if __name__ == '__main__':
-	Server.start(log_screen=True)
+	http.Server.start(log_screen=True)
 	cherrypy.engine.block()

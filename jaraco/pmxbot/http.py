@@ -112,7 +112,7 @@ class BitBucket(Kiln):
 		canon_url = ''
 		repository = dict(
 			name=payload['repository']['name'],
-			absolute_url=payload['repository']['links']['html'],
+			absolute_url=payload['repository']['links']['html']['href'],
 		)
 		commits = [
 			change['new']['target']
