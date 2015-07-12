@@ -101,8 +101,11 @@ class BitBucket(Kiln):
 	"""
 
 	@cherrypy.expose
-	@cherrypy.tools.json_in()
-	def index(self):
+	@cherrypy.tools.json_in(debug=True, force=False)
+	def default(self, payload=None):
+		if payload:
+			return super(BitBucket, self).default(payload)
+
 		payload = cherrypy.request.json
 		log.info("Received Bitbucket webhook %s", payload)
 		user = payload['actor']['display_name']
@@ -239,14 +242,14 @@ class Server(object):
 		return tmpl.format_map(locals())
 
 	@classmethod
-	def start(cls):
+	def start(cls, log_screen=False):
 		cherrypy_cors.install()
 		config = {
 			'global': {
 				'server.socket_host': '::0',
 				'server.socket_port': int(os.environ.get('PORT', 8080)),
 				'environment': 'production',
-				'log.screen': False,
+				'log.screen': log_screen,
 			},
 			'/': {
 				'cors.expose_public.on': True,
