@@ -115,12 +115,17 @@ class BitBucket(Kiln):
 			absolute_url=payload['repository']['links']['html'],
 		)
 		commits = [
-			dict(message=change['new']['target'])
+			change['new']['target']
 			for change in payload['push']['changes']
 			if change['new'] is not None
 		]
 		for channel in self.get_channels(payload['repository']['name']):
-			messages = self.format(**locals())
+			messages = self.format(
+				user=user,
+				commits=commits,
+				canon_url=canon_url,
+				repository=repository,
+			)
 			Server.send_to(channel, *messages)
 
 	def format(self, commits, canon_url, repository, user, **kwargs):

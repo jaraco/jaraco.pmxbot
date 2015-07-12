@@ -1,6 +1,9 @@
 import cherrypy
+import pmxbot
 
 from jaraco.pmxbot import http
+
+pmxbot.config['BitBucket channels'] = dict(default='default')
 
 class Server(http.Server):
 	def send_to(self, channel, *msgs):
