@@ -38,6 +38,10 @@ class Jenkins(ChannelSelector):
 	Handle JSON notifications as sent from
 	https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
 	"""
+
+	# Notification plugin changed wording
+	FINAL_PHASES = ['FINISHED', 'FINALIZED']
+
 	@cherrypy.expose
 	@cherrypy.tools.json_in()
 	def default(self, channel=None):
@@ -50,7 +54,7 @@ class Jenkins(ChannelSelector):
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
-		if not build.get('phase') == 'FINISHED':
+		if not build.get('phase') in self.FINAL_PHASES:
 			return
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
 		yield tmpl.format(**vars())
