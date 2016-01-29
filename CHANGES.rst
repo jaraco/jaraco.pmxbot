@@ -3,6 +3,11 @@
 
 Moved project hosting to Github.
 
+3.7
+===
+
+Support for newer Jenkins Notification plugin wording.
+
 3.6
 ===
 
