@@ -26,6 +26,7 @@ setup_params = dict(
 	long_description=long_description,
 	url="https://github.com/jaraco/jaraco.pmxbot",
 	packages=setuptools.find_packages(),
+	namespace_packages=['jaraco'],
 	include_package_data=True,
 	install_requires=[
 		'twilio',
