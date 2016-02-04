@@ -25,7 +25,7 @@ setup_params = dict(
 	description="pmxbot commands by jaraco",
 	long_description=long_description,
 	url="https://github.com/jaraco/jaraco.pmxbot",
-	packages=setuptools.find_packages(),
+	packages=setuptools.find_packages(exclude='tests'),
 	namespace_packages=['jaraco'],
 	include_package_data=True,
 	install_requires=[
