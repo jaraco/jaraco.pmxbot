@@ -54,7 +54,7 @@ class Jenkins(ChannelSelector):
 			Server.send_to(channel, *self.build_messages(**payload))
 
 	def build_messages(self, name, url, build, **kwargs):
-		log.info("Got build from Jenkins: {build}".format(**vars()))
+		log.info("Got build from Jenkins: %s", build)
 		if build.get('phase') not in self.FINAL_PHASES:
 			return
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
