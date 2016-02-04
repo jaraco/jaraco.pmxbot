@@ -40,6 +40,7 @@ setup_params = dict(
 	tests_require=[
 		'pytest>=2.8',
 		'pmxbot',
+		'nose',  # for cherrypy.test
 	],
 	classifiers=[
 		"Development Status :: 5 - Production/Stable",

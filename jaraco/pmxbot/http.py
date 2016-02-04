@@ -2,6 +2,7 @@
 HTTP API endpoint for the bot.
 """
 
+import re
 import os
 import json
 import logging
@@ -172,25 +173,96 @@ class FogBugz(ChannelSelector):
 
 
 class Velociraptor(ChannelSelector):
+
+	SWARM_DEPLOY_DONE_RE = re.compile(r'Swarm (.+) finished')
+
 	@cherrypy.expose
 	@cherrypy.tools.allow(methods=['POST'])
 	@cherrypy.tools.json_in()
 	def default(self):
 		event = cherrypy.request.json
-		# TODO validate event object
-		# TODO handle other kind of events (e.g. uptests)
 		log.info("Received event with %s", event)
-		if 'route' not in event['tags']:
-			return
+		self._validate_event(event)
+		tags = set(event['tags'])
+
+		if 'route' in tags:
+			self._handle_route(event)
+			return 'OK'
+		elif {'swarm', 'deploy', 'done'} == tags:
+			self._handle_swarm_deploy_done(event)
+			return 'OK'
+		elif {'scheduled', 'failed'} == tags:
+			self._handle_scheduled_failed(event)
+			return 'OK'
+		else:
+			log.info("Ignoring event")
+			return 'IGNORED'
+
+	def _handle_route(self, event):
+		self._validate_event_route(event)
+
 		swarm = event['title']
 		app, sep, rest = swarm.partition('-')
+		msg = "Routed {swarm}".format(**locals())
+		self._broadcast(app, msg)
+
+	def _handle_swarm_deploy_done(self, event):
+		self._validate_event_swarm_deploy_done(event)
+
+		title = event['title']
+		match = self.SWARM_DEPLOY_DONE_RE.match(title)
+		assert match is not None, 'Invalid title {}'.format(title)
+		swarm = match.groups()[0]
+		app, sep, rest = swarm.partition('-')
+		msg = event['message']
+		self._broadcast(app, msg)
+
+	def _handle_scheduled_failed(self, event):
+		self._validate_event_scheduled_failed(event)
+		msg = event['message']
+
+		# msg is a list of '\n\n'-separated messages, one per swarm
+		msgs = filter(None, [x.strip() for x in msg.split('\n\n')])
+
+		def parse_msg(msg):
+			# Each msg is like:
+			# swarm_name: failure_reason\ntraceback
+			tokens = msg.split('\n')
+			header, traceback = tokens[0], '\n'.join(tokens[1:])
+			swarm, reason = header.split(':')
+			return swarm, reason, traceback
+
+		for msg in msgs:
+			swarm, reason, traceback = parse_msg(msg)
+			app, sep, rest = swarm.partition('-')
+			text = (
+				'Scheduled uptests failed for {swarm}:'
+				'{reason}\n{traceback}'
+			).format(**locals())
+			self._broadcast(app, text)
+
+	def _broadcast(self, app, msg):
 		for channel in self.get_channels(app):
 			log.info("Sending to %s", channel)
-			Server.send_to(channel, *self.format(**event))
-		return "OK"
+			Server.send_to(channel, 'VR: ' + msg)
 
-	def format(self, title, **ignored):
-		yield "Routed {title}".format(**locals())
+	def _validate_event(self, event):
+		if 'tags' not in event:
+			raise cherrypy.HTTPError(400, 'Missing tags')
+
+	def _validate_event_route(self, event):
+		if 'title' not in event:
+			raise cherrypy.HTTPError(400, 'Missing title')
+
+	def _validate_event_swarm_deploy_done(self, event):
+		if 'title' not in event:
+			raise cherrypy.HTTPError(400, 'Missing title')
+		if 'message' not in event:
+			raise cherrypy.HTTPError(400, 'Missing message')
+
+	def _validate_event_scheduled_failed(self, event):
+		if 'message' not in event:
+			raise cherrypy.HTTPError(400, 'Missing message')
 
 
 def actually_decode():
