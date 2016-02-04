@@ -95,9 +95,9 @@ class VelociraptorTest(helper.CPWebCase):
         payload = {
             'tags': ['scheduled', 'failed'],
             'message': '\n\n'.join([
-                'MySwarm1: encoding.py failed\ntraceback',
-                'MySwarm2: some other error\nfat\ntraceback',
-                'MySwarm3: bizarre bug',  # no traceback
+                'MySwarm1: encoding.py failed:\ntraceback',
+                'MySwarm2: some other error...\nfat\ntraceback',
+                'MySwarm3: bizarre bug;',  # no traceback
             ])
         }
         self._post_json(payload)
@@ -107,16 +107,16 @@ class VelociraptorTest(helper.CPWebCase):
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm1: '
-                 'encoding.py failed\ntraceback'),
+                 'encoding.py failed:\ntraceback'),
             ),
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm2: '
-                 'some other error\nfat\ntraceback'),
+                 'some other error...\nfat\ntraceback'),
             ),
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm3: '
-                 'bizarre bug\n'),
+                 'bizarre bug;\n'),
             ),
         ])

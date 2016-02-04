@@ -229,7 +229,7 @@ class Velociraptor(ChannelSelector):
 			# swarm_name: failure_reason\ntraceback
 			tokens = msg.split('\n')
 			header, traceback = tokens[0], '\n'.join(tokens[1:])
-			swarm, reason = header.split(':')
+			swarm, reason = header.split(':', 1)
 			return swarm, reason, traceback
 
 		for msg in msgs:
