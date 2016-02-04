@@ -33,6 +33,7 @@ class ChannelSelector(object):
 		matching_channels = spec.get(key, default_channels)
 		return always_iterable(matching_channels)
 
+
 class Jenkins(ChannelSelector):
 	"""
 	Handle JSON notifications as sent from
@@ -54,10 +55,11 @@ class Jenkins(ChannelSelector):
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: {build}".format(**vars()))
-		if not build.get('phase') in self.FINAL_PHASES:
+		if build.get('phase') not in self.FINAL_PHASES:
 			return
 		tmpl = "Build {build[number]} {build[status]} ({build[full_url]})"
 		yield tmpl.format(**vars())
+
 
 class NewRelic(object):
 
@@ -65,7 +67,8 @@ class NewRelic(object):
 	def default(self, channel, **kwargs):
 		for key, value in kwargs.items():
 			handler = getattr(self, key, None)
-			if not handler: continue
+			if not handler:
+				continue
 			value = json.loads(value)
 			Server.send_to(channel, handler(**value))
 		return "OK"
@@ -75,6 +78,7 @@ class NewRelic(object):
 			"Alert! [{application_name} {severity}] {message} ({alert_url})"
 			.format(**kwargs)
 		)
+
 
 class Kiln(ChannelSelector):
 
@@ -96,6 +100,7 @@ class Kiln(ChannelSelector):
 		)
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
+
 
 class BitBucket(Kiln):
 	"""
@@ -145,6 +150,7 @@ class BitBucket(Kiln):
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
 
+
 class FogBugz(ChannelSelector):
 	@cherrypy.expose
 	def trigger(self, **event):
@@ -156,7 +162,10 @@ class FogBugz(ChannelSelector):
 		log.info("Got case update from FogBugz: %s", event)
 		if event['EventType'] == 'CaseOpened':
 			base = "https://yougov.fogbugz.com"
-			message = "{PersonEditingName} opened {Title} ({base}/default.asp?{CaseNumber})"
+			message = (
+				"{PersonEditingName} opened {Title} "
+				"({base}/default.asp?{CaseNumber})"
+			)
 			proj = event['ProjectName']
 			for channel in self.get_channels(proj):
 				Server.send_to(channel, message.format(base=base, **event))
@@ -164,15 +173,19 @@ class FogBugz(ChannelSelector):
 
 class Velociraptor(ChannelSelector):
 	@cherrypy.expose
+	@cherrypy.tools.allow(methods=['POST'])
 	@cherrypy.tools.json_in()
 	def default(self):
 		event = cherrypy.request.json
+		# TODO validate event object
+		# TODO handle other kind of events (e.g. uptests)
 		log.info("Received event with %s", event)
 		if 'route' not in event['tags']:
 			return
 		swarm = event['title']
 		app, sep, rest = swarm.partition('-')
 		for channel in self.get_channels(app):
+			log.info("Sending to %s", channel)
 			Server.send_to(channel, *self.format(**event))
 		return "OK"
 
@@ -275,6 +288,7 @@ def startup(*args, **kwargs):
 		return
 	Server.start()
 	pmxbot.core.FinalRegistry.at_exit(cherrypy.engine.stop)
+
 
 @pmxbot.core.execdelay("http", channel=None, howlong=0.3, repeat=True)
 def relay(conn, event):

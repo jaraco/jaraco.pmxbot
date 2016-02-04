@@ -1,0 +1,3 @@
+[MESSAGES CONTROL]
+
+disable=invalid-name,missing-docstring,bad-builtin,import-error,mixed-indentation,bad-continuation,unused-argument,no-name-in-module,unused-variable,no-self-use
