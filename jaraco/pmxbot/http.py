@@ -9,6 +9,7 @@ import logging
 import codecs
 import textwrap
 import urllib.parse
+from itertools import chain
 
 import pkg_resources
 from jaraco.itertools import always_iterable
@@ -236,13 +237,16 @@ class Velociraptor(ChannelSelector):
 			swarm, reason, traceback = parse_msg(msg)
 			app, sep, rest = swarm.partition('-')
 			text = (
-				'Scheduled uptests failed for {swarm}:'
-				'{reason}\n{traceback}'
+				'Scheduled uptests failed for {swarm}:{reason}'
 			).format(**locals())
 			self._broadcast(app, text)
 
 	def _broadcast(self, app, msg):
-		for channel in self.get_channels(app):
+		channels = self.get_channels(app)
+		if not channels:
+			log.warning("No channels to send to.")
+			return
+		for channel in channels:
 			log.info("Sending to %s", channel)
 			Server.send_to(channel, 'VR: ' + msg)
 
@@ -291,7 +295,9 @@ class Server(object):
 	@classmethod
 	def send_to(cls, channel, *msgs):
 		cls.queue.append(pmxbot.core.SwitchChannel(channel))
-		cls.queue.extend(msgs)
+		# We must send line-by-line, so split multiline messages
+		lines = chain(*(msg.splitlines() for msg in msgs))
+		cls.queue.extend(lines)
 
 	@cherrypy.expose
 	@cherrypy.tools.actually_decode()

@@ -7,6 +7,33 @@ from cherrypy.test import helper
 from jaraco.pmxbot.http import Server
 
 
+class ServerTest(helper.CPWebCase):
+
+    def setUp(self):
+        Server.queue.clear()
+
+    def tearDown(self):
+        Server.queue.clear()
+
+    def test_send_to(self):
+        Server.send_to('channel', 'msg1', 'msg2', 'msg3')
+        assert Server.queue == ['#channel', 'msg1', 'msg2', 'msg3']
+
+    def test_send_to_multiline(self):
+        Server.send_to('channel', 'msg1\nmsg2', 'msg3')
+        assert Server.queue == ['#channel', 'msg1', 'msg2', 'msg3']
+
+    def test_send_to_multiple(self):
+        Server.send_to('chan1', 'msg1')
+        Server.send_to('chan2', 'msg2')
+        Server.send_to('chan3', 'msg3\nmsg4')
+        assert Server.queue == [
+            '#chan1', 'msg1',
+            '#chan2', 'msg2',
+            '#chan3', 'msg3', 'msg4',
+        ]
+
+
 class VelociraptorTest(helper.CPWebCase):
 
     @staticmethod
@@ -107,16 +134,16 @@ class VelociraptorTest(helper.CPWebCase):
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm1: '
-                 'encoding.py failed:\ntraceback'),
+                 'encoding.py failed:'),
             ),
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm2: '
-                 'some other error...\nfat\ntraceback'),
+                 'some other error...'),
             ),
             mock.call(
                 'chan1',
                 ('VR: Scheduled uptests failed for MySwarm3: '
-                 'bizarre bug;\n'),
+                 'bizarre bug;'),
             ),
         ])
