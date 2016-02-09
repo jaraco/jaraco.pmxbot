@@ -52,8 +52,20 @@ class Jenkins(ChannelSelector):
 		del channel
 		payload = cherrypy.request.json
 		job = payload['name']
-		for channel in self.get_channels(job):
-			Server.send_to(channel, *self.build_messages(**payload))
+		if self.display_message(**payload):
+			for channel in self.get_channels(job):
+				Server.send_to(channel, *self.build_messages(**payload))
+
+	def display_message(self, name, url, build, **kwargs):
+		"""
+		Decides if message should be displayed based on its status and config.
+		Mostly done to not display the SUCCESS statuses of periodic builds.
+		Options are SUCCESS, UNSTABLE, FAILED, ABORTED, and CYCLE.
+		"""
+		jenkins_filtering = pmxbot.config.get("jenkins_filtering", {})
+		job_filtering = jenkins_filtering.get(name, [])
+		if not job_filtering or build.get('status') in job_filtering:
+			return True
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: %s", build)
