@@ -33,6 +33,8 @@ class ChannelSelector(object):
 		spec = pmxbot.config.get(self.channel_spec_config, {})
 		default_channels = spec.get('default', [])
 		matching_channels = spec.get(key, default_channels)
+		if isinstance(matching_channels, dict) and 'channels' in matching_channels:
+			matching_channels = matching_channels['channels']
 		return always_iterable(matching_channels)
 
 
@@ -62,10 +64,12 @@ class Jenkins(ChannelSelector):
 		Mostly done to not display the SUCCESS statuses of periodic builds.
 		Options are SUCCESS, UNSTABLE, FAILED, ABORTED, and CYCLE.
 		"""
-		jenkins_filtering = pmxbot.config.get("jenkins_filtering", {})
-		job_filtering = jenkins_filtering.get(name, [])
-		if not job_filtering or build.get('status') in job_filtering:
-			return True
+		channel_spec = pmxbot.config.get(self.channel_spec_config, {})
+		job_spec = channel_spec.get(name, {})
+		allowed_statuses = []
+		if isinstance(job_spec, dict) and 'statuses' in job_spec:
+			allowed_statuses = always_iterable(job_spec["statuses"])
+		return not allowed_statuses or build.get('status') in allowed_statuses
 
 	def build_messages(self, name, url, build, **kwargs):
 		log.info("Got build from Jenkins: %s", build)
