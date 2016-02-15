@@ -122,28 +122,42 @@ class VelociraptorTest(helper.CPWebCase):
         payload = {
             'tags': ['scheduled', 'failed'],
             'message': '\n\n'.join([
-                'MySwarm1: encoding.py failed:\ntraceback',
-                'MySwarm2: some other error...\nfat\ntraceback',
-                'MySwarm3: bizarre bug;',  # no traceback
+                'MySwarm1@host: encoding.py failed:\ntraceback',
+                'MySwarm2@host: some other error...\nfat\ntraceback',
+                'MySwarm3@host: bizarre bug;',  # no traceback
+                '''MySwarm4@host: py3 stacktraces contain multiline tracebacks:
+trackback1
+trackback1
+trackback1
+
+traceback2
+traceback2
+traceback2
+''',
             ])
         }
         self._post_json(payload)
         self.assertStatus('200 OK')
         self.assertBody('OK')
-        mock_send_to.assert_has_calls([
+        assert mock_send_to.call_args_list == [
             mock.call(
                 'chan1',
-                ('VR: Scheduled uptests failed for MySwarm1: '
+                ('VR: Scheduled uptests failed for MySwarm1@host: '
                  'encoding.py failed:'),
             ),
             mock.call(
                 'chan1',
-                ('VR: Scheduled uptests failed for MySwarm2: '
+                ('VR: Scheduled uptests failed for MySwarm2@host: '
                  'some other error...'),
             ),
             mock.call(
                 'chan1',
-                ('VR: Scheduled uptests failed for MySwarm3: '
+                ('VR: Scheduled uptests failed for MySwarm3@host: '
                  'bizarre bug;'),
             ),
-        ])
+            mock.call(
+                'chan1',
+                ('VR: Scheduled uptests failed for MySwarm4@host: '
+                 'py3 stacktraces contain multiline tracebacks:'),
+            ),
+        ]

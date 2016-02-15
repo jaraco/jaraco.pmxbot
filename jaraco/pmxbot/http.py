@@ -238,22 +238,46 @@ class Velociraptor(ChannelSelector):
 		self._validate_event_scheduled_failed(event)
 		msg = event['message']
 
-		# msg is a list of '\n\n'-separated messages, one per swarm
-		msgs = filter(None, [x.strip() for x in msg.split('\n\n')])
+		def parse_msg():
+			'''Parse this notification message.
 
-		def parse_msg(msg):
-			# Each msg is like:
-			# swarm_name: failure_reason\ntraceback
-			tokens = msg.split('\n')
-			header, traceback = tokens[0], '\n'.join(tokens[1:])
-			swarm, reason = header.split(':', 1)
-			return swarm, reason, traceback
+			The message is a sequence of individual failures.
+			Each failure starts with a "header",
+			containing the appname, host, etc. and then a
+			complex traceback, possibly spanninig multiple lines.
 
-		for msg in msgs:
-			swarm, reason, traceback = parse_msg(msg)
+			We parse by looking for a line that looks like
+			a header and accumulating traceback lines.
+			We yield previous header and traceback as soon
+			as we hit the following header.
+			'''
+			header_re = re.compile(
+				r'(?P<appname>[a-zA-Z0-9_\-\.]+)'
+				r'@(?P<hostname>[a-zA-Z0-9\.]+): '
+				r'(?P<summary>[^\n]*)')
+			gs, tb = {}, []
+			for line in msg.splitlines():
+				m = header_re.match(line)
+				if m is not None:
+					# This line looks like a header
+					if gs:
+						# Yield previous item
+						yield gs, '\n'.join(tb)
+					# Initialize accumulator
+					gs, tb = m.groups(), []
+				else:
+					# This must be a traceback line
+					tb.append(line)
+			# Yield last failure, too
+			if gs:
+				yield gs, '\n'.join(tb)
+
+		for msg_ in parse_msg():
+			(swarm, hostname, reason), _traceback = msg_
 			app, sep, rest = swarm.partition('-')
 			text = (
-				'Scheduled uptests failed for {swarm}:{reason}'
+				'Scheduled uptests failed for '
+				'{swarm}@{hostname}: {reason}'
 			).format(**locals())
 			self._broadcast(app, text)
 
