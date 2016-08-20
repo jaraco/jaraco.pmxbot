@@ -1,3 +1,8 @@
+3.11
+====
+
+Also log Close events from Fogbugz.
+
 3.9
 ===
 

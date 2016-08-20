@@ -169,7 +169,20 @@ class BitBucket(Kiln):
 			yield commit['message'].splitlines()[0]
 
 
+class FogbugzEventType(str):
+	@property
+	def action(self):
+		"""
+		For an EventType, return the action in lowercase,
+		stripping the 'Case' prefix.
+		"""
+		_, _, action = self.partition('Case')
+		return action.lower()
+
+
 class FogBugz(ChannelSelector):
+	handled_types = 'CaseOpened', 'CaseClosed'
+
 	@cherrypy.expose
 	def trigger(self, **event):
 		if event['CaseNumber']:
@@ -178,15 +191,20 @@ class FogBugz(ChannelSelector):
 
 	def handle_case(self, event):
 		log.info("Got case update from FogBugz: %s", event)
-		if event['EventType'] == 'CaseOpened':
-			base = "https://yougov.fogbugz.com"
-			message = (
-				"{PersonEditingName} opened {Title} "
-				"({base}/default.asp?{CaseNumber})"
-			)
-			proj = event['ProjectName']
-			for channel in self.get_channels(proj):
-				Server.send_to(channel, message.format(base=base, **event))
+
+		if event['EventType'] not in self.handled_types:
+			return
+
+		event['EventType'] = FogbugzEventType(event['EventType'])
+
+		base = "https://yougov.fogbugz.com"
+		message = (
+			"{PersonEditingName} {EventType.action} {Title} "
+			"({base}/default.asp?{CaseNumber})"
+		)
+		proj = event['ProjectName']
+		for channel in self.get_channels(proj):
+			Server.send_to(channel, message.format(base=base, **event))
 
 
 class Velociraptor(ChannelSelector):
