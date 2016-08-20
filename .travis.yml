@@ -1,7 +1,7 @@
 sudo: false
 language: python
 python:
- - 3.5
+- 3.5
 script:
 - pip install -U setuptools pytest
 - python setup.py test
@@ -16,5 +16,6 @@ deploy:
     all_branches: true
     python: 3.5
   user: jaraco
-  # supply password with `travis encrypt --add deploy.password`
   distributions: dists
+  password:
+    secure: b4tVvxeKHjU0X0oAKBZG5Wv4CLS7hDUHhZfslINltn3dqEW/aLpxor5/KoNnn3L7H8KJwU/+q57YfwCNmAbkLV4KFlQSx16k+gAXJTb9FRGYDkcH4DxQVm+jo4AbbConwBer517SD8NsHdEzCGq3FcBhR1RG/SMbRCYFadg77uBhoea6FZv52+eHLqcFhjGcw8CsM/1vCQ7HZYACzCoH4fU8cdH505k13Uad3xqf1tTJtZKSsDCUmPcIZG0ES27AouvXpXH9Gqy7Y0EVll9uE804WjfVpwLzm+X2tzV32s9N6kAULfgoTg/Ye2Ne6uLXsk+rv9cNKN9RrNKYqcFslvO3e8CRFR19dAqJ+7ESZSV2vY0duMSmI8Qi6cwdmMNrN5TRZ+Casz4rK+iqXXjBSFUW1cSNIqHUvJbZvj0Vmg3K/MOKGPqU+2kFCk4ARoBSz6Z0a+wmd641hu5lPVyPYUZNBYGpOx/zAt7aj9XkOn12Ud0IM4heUz9n99ubL3AG2vh9zmNPbq0HL44NTN7/A0mE1xajmqN7y+UO70L88Xek7QpLLI9vSBpAdX4U+iSwv6U1fx0CV30K/NHU/zHMv2eQm6SNzDgwEBoH90JSWddw5JFtm4q3QooxIrXMu2GNYhzqZ8eFY2NTdoXxQZBPs5pNebrVtbAujV46qkseksU=
