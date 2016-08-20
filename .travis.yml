@@ -3,5 +3,18 @@ language: python
 python:
  - 3.5
 script:
- - pip install -U setuptools
- - python setup.py test
+- pip install -U setuptools pytest
+- python setup.py test
+branches:
+  except:
+  - skeleton
+deploy:
+  provider: pypi
+  server: https://upload.pypi.org/legacy/
+  on:
+    tags: true
+    all_branches: true
+    python: 3.5
+  user: jaraco
+  # supply password with `travis encrypt --add deploy.password`
+  distributions: dists

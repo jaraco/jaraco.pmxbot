@@ -1,7 +1,14 @@
-jaraco.pmxbot
-=============
-
 Plugins for `pmxbot <https://pypi.python.org/pypi/pmxbot>`_ by jaraco.
+
+.. image:: https://img.shields.io/pypi/v/jaraco.pmxbot.svg
+   :target: https://pypi.org/project/jaraco.pmxbot
+
+.. image:: https://img.shields.io/pypi/pyversions/jaraco.pmxbot.svg
+
+.. image:: https://img.shields.io/pypi/dm/jaraco.pmxbot.svg
+
+.. image:: https://img.shields.io/travis/jaraco/jaraco.pmxbot/master.svg
+   :target: http://travis-ci.org/jaraco/jaraco.pmxbot
 
 Bookmarklet
 -----------
