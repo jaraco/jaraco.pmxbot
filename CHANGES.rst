@@ -3,6 +3,11 @@
 
 Also log Close events from Fogbugz.
 
+3.10
+====
+
+#2: Filter build statuses.
+
 3.9
 ===
 
