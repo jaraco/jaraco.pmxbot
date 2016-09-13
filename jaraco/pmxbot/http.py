@@ -427,6 +427,6 @@ def startup(*args, **kwargs):
 
 
 @pmxbot.core.execdelay("http", channel=None, howlong=0.3, repeat=True)
-def relay(conn, event):
+def relay(client, event):
 	while Server.queue:
 		yield Server.queue.pop(0)
