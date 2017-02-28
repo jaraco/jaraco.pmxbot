@@ -360,9 +360,10 @@ class Server(object):
 	@cherrypy.expose
 	@cherrypy.tools.actually_decode()
 	def default(self, channel):
-		lines = (line.rstrip() for line in cherrypy.request.body)
+		lines = [line.rstrip() for line in cherrypy.request.body]
+		msg_len = sum(len(line.encode('utf-8')) for line in lines)
 		self.send_to(channel, *lines)
-		return 'Message sent to {channel}'.format(**locals())
+		return '{msg_len} bytes queued for {channel}'.format(**locals())
 
 	@cherrypy.expose
 	def bookmarklet(self):
