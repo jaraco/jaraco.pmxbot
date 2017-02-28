@@ -1,3 +1,11 @@
+3.12
+====
+
+HTTP integration now reports more detail when a message is
+received.
+
+Refreshed project packaging.
+
 3.11
 ====
 
