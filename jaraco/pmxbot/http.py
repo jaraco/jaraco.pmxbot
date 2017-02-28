@@ -362,7 +362,7 @@ class Server(object):
 	def default(self, channel):
 		lines = (line.rstrip() for line in cherrypy.request.body)
 		self.send_to(channel, *lines)
-		return 'Message sent'
+		return 'Message sent to {channel}'.format(**locals())
 
 	@cherrypy.expose
 	def bookmarklet(self):
