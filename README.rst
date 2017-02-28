@@ -10,8 +10,15 @@ Plugins for `pmxbot <https://pypi.python.org/pypi/pmxbot>`_ by jaraco.
 .. image:: https://img.shields.io/travis/jaraco/jaraco.pmxbot/master.svg
    :target: http://travis-ci.org/jaraco/jaraco.pmxbot
 
+License
+=======
+
+License is indicated in the project metadata (typically one or more
+of the Trove classifiers). For more details, see `this explanation
+<https://github.com/jaraco/skeleton/issues/1>`_.
+
 Bookmarklet
------------
+===========
 
 jaraco.pmxbot provides a bookmarklet
 for readily sending messages to the pmxbot HTTP interface. To install it,
