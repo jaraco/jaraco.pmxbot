@@ -99,6 +99,10 @@ class NewRelic(object):
 
 
 class Kiln(ChannelSelector):
+	"""
+	See payload format here:
+	http://help.fogcreek.com/8111/web-hooks-integrating-kiln-with-other-services#Custom_Web_Hooks
+	"""
 
 	@cherrypy.expose
 	def default(self, payload):
@@ -117,7 +121,11 @@ class Kiln(ChannelSelector):
 				number=len(commits), what=commit_s, **vars())
 		)
 		for commit in commits:
-			yield commit['message'].splitlines()[0]
+			msg = commit['message'].splitlines()[0]
+			branch = commit.get('branch')
+			if branch is not None:
+				msg = "[{}] ".format(branch) + msg
+			yield msg
 
 
 class BitBucket(Kiln):
