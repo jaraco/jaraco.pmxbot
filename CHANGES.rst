@@ -1,3 +1,8 @@
+3.13
+====
+
+Show commit's branch, too
+
 3.12
 ====
 
