@@ -1,10 +1,10 @@
 import json
-from unittest import mock
+from unittest import mock, TestCase
 
 import cherrypy
 from cherrypy.test import helper
 
-from jaraco.pmxbot.http import Server
+from jaraco.pmxbot.http import Server, Kiln
 
 
 class ServerTest(helper.CPWebCase):
@@ -160,4 +160,56 @@ traceback2
                 ('VR: Scheduled uptests failed for MySwarm4@host: '
                  'py3 stacktraces contain multiline tracebacks:'),
             ),
+        ]
+
+
+class TestKiln:
+
+    def setup(self):
+        self.kiln = Kiln()
+
+    def test_ciao(self):
+        payload = {
+            'commits': [
+                {
+                    'author': 'Ken Thomson <ken@unix.org>',
+                    'branch': 'default',
+                    'id': 'deadbeef',
+                    'message': 'Nice commit',
+                    'revision': 1234,
+                    'tags': [],
+                    'timestamp': '2017-03-03T09:57:29Z',
+                    'url': 'https://yougov.kilnhg.com/Code/Repositories/A/repo/History/abcdefg'
+                },
+                {
+                    'author': 'Ken Thomson <ken@unix.org>',
+                    'branch': 'default',
+                    'id': 'deadbeef',
+                    'message': 'Another nice commit',
+                    'revision': 1234,
+                    'tags': ['my-branch'],
+                    'timestamp': '2017-03-03T09:57:29Z',
+                    'url': 'https://yougov.kilnhg.com/Code/Repositories/A/repo/History/abcdefg'
+                },
+            ],
+            'pusher': {
+                'accesstoken': False,
+                'email': 'ken@unix.org',
+                'fullName': 'ken'
+            },
+            'repository': {
+                'central': True,
+                'description': '',
+                'id': 1234,
+                'name': 'repo',
+                'url': 'https://yougov.kilnhg.com/Code/Repositories/A/repo'
+            },
+            'timestamp': None
+        }
+
+        rows = list(self.kiln.format(**payload))
+        assert rows == [
+            'ken pushed 2 commits to repo (https://yougov.kilnhg.com/Code/Repositories/A/repo):',
+            '[my-branch] Nice commit',
+            '[my-branch] Another nice commit'
         ]

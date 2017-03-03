@@ -117,13 +117,18 @@ class Kiln(ChannelSelector):
 		yield (
 			"{pusher[fullName]} pushed {number} {what} "
 			"to {repository[name]} "
-			"({repository[url]}) :".format(
+			"({repository[url]}):".format(
 				number=len(commits), what=commit_s, **vars())
 		)
+		# Note: It looks like the actual branch of a bunch of
+		# commits is stored in the last commit's "tags" field.
+		# So, use "tags" as "branch", if possible.
+		tags = set(chain(*(commit.get('tags', []) for commit in commits)))
+		tag = '|'.join(tags)
 		for commit in commits:
 			msg = commit['message'].splitlines()[0]
-			branch = commit.get('branch')
-			if branch is not None:
+			branch = tag or commit.get('branch')
+			if branch:
 				msg = "[{}] ".format(branch) + msg
 			yield msg
 
