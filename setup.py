@@ -23,6 +23,7 @@ params = dict(
 	packages=setuptools.find_packages(exclude='tests'),
 	include_package_data=True,
 	namespace_packages=name.split('.')[:-1],
+	python_requires='>=2.7',
 	install_requires=[
 		'twilio',
 		'cherrypy_cors',
