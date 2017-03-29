@@ -217,6 +217,6 @@ class TestKiln:
         rows = list(self.kiln.format(**payload))
         assert rows == [
             'ken pushed 2 commits to repo (https://yougov.kilnhg.com/Code/Repositories/A/repo):',
-            '[my-branch] Nice commit',
+            'Nice commit',
             '[my-branch] Another nice commit'
         ]

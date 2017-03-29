@@ -5,6 +5,8 @@ Limit commit reports to 10.
 
 Use inflect for easier nice name rendering(s).
 
+No longer show branches for Kiln commits and only show tags.
+
 3.14
 ====
 
