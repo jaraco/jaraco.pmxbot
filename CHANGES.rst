@@ -3,6 +3,8 @@
 
 Limit commit reports to 10.
 
+Use inflect for easier nice name rendering(s).
+
 3.13
 ====
 
