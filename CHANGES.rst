@@ -1,9 +1,16 @@
-3.14
+3.15
 ====
 
 Limit commit reports to 10.
 
 Use inflect for easier nice name rendering(s).
+
+3.14
+====
+
+(semver deviation - should have been +0.0.1)
+
+Fix commit's branch name
 
 3.13
 ====
