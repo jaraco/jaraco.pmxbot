@@ -27,6 +27,7 @@ params = dict(
 		'twilio',
 		'cherrypy_cors',
 		'jaraco.itertools',
+		'inflect',
 	],
 	extras_require={
 	},

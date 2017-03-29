@@ -16,6 +16,7 @@ from jaraco.itertools import always_iterable
 import cherrypy
 import pmxbot.core
 import cherrypy_cors
+import inflect
 
 
 log = logging.getLogger(__name__)
@@ -113,13 +114,13 @@ class Kiln(ChannelSelector):
 		return "OK"
 
 	def format(self, commits, pusher, repository, **kwargs):
-		commit_s = 'commit' if len(commits) == 1 else 'commits'
-		yield (
+		commit_s = inflect.engine().plural_noun('commit', len(commits))
+		tmpl = (
 			"{pusher[fullName]} pushed {number} {what} "
 			"to {repository[name]} "
-			"({repository[url]}) :".format(
-				number=len(commits), what=commit_s, **vars())
+			"({repository[url]}) :"
 		)
+		yield tmpl.format(number=len(commits), what=commit_s, **locals())
 		limit = 10
 		if len(commits) > limit:
 			yield "(last {limit})".format_map(locals())
@@ -167,15 +168,14 @@ class BitBucket(Kiln):
 			Server.send_to(channel, *messages)
 
 	def format(self, commits, canon_url, repository, user, **kwargs):
-		if not commits:
-			return
-		commit_s = 'commit' if len(commits) == 1 else 'commits'
-		yield (
+		commit_s = inflect.engine().plural_noun('commit', len(commits))
+		tmpl = (
 			"{user} pushed {number} {what} "
 			"to {repository[name]} "
-			"({canon_url}{repository[absolute_url]}) :".format(
-				number=len(commits), what=commit_s, **vars())
+			"({canon_url}{repository[absolute_url]}) :"
 		)
+
+		yield tmpl.format(number=len(commits), what=commit_s, **locals())
 		for commit in commits:
 			yield commit['message'].splitlines()[0]
 
