@@ -1,6 +1,6 @@
 import json
 import textwrap
-from unittest import mock, TestCase
+from unittest import mock
 
 import cherrypy
 from cherrypy.test import helper
