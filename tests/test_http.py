@@ -1,4 +1,5 @@
 import json
+import textwrap
 from unittest import mock
 
 import cherrypy
@@ -119,22 +120,28 @@ class VelociraptorTest(helper.CPWebCase):
     @mock.patch('jaraco.pmxbot.http.ChannelSelector.get_channels')
     def test_event_scheduled_failed(self, mock_get_channels, mock_send_to):
         mock_get_channels.return_value = ['chan1']
+        message = textwrap.dedent("""
+            MySwarm1@host: encoding.py failed:
+            traceback
+
+            MySwarm2@host: some other error...
+            fat
+            traceback
+
+            MySwarm3@host: bizarre bug;
+
+            MySwarm4@host: py3 stacktraces contain multiline tracebacks:
+            trackback1
+            trackback1
+            trackback1
+
+            traceback2
+            traceback2
+            traceback2
+            """)
         payload = {
             'tags': ['scheduled', 'failed'],
-            'message': '\n\n'.join([
-                'MySwarm1@host: encoding.py failed:\ntraceback',
-                'MySwarm2@host: some other error...\nfat\ntraceback',
-                'MySwarm3@host: bizarre bug;',  # no traceback
-                '''MySwarm4@host: py3 stacktraces contain multiline tracebacks:
-trackback1
-trackback1
-trackback1
-
-traceback2
-traceback2
-traceback2
-''',
-            ])
+            'message': message,
         }
         self._post_json(payload)
         self.assertStatus('200 OK')
