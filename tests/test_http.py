@@ -17,20 +17,20 @@ class ServerTest(helper.CPWebCase):
 
     def test_send_to(self):
         Server.send_to('channel', 'msg1', 'msg2', 'msg3')
-        assert Server.queue == ['#channel', 'msg1', 'msg2', 'msg3']
+        assert Server.queue == ['channel', 'msg1', 'msg2', 'msg3']
 
     def test_send_to_multiline(self):
         Server.send_to('channel', 'msg1\nmsg2', 'msg3')
-        assert Server.queue == ['#channel', 'msg1', 'msg2', 'msg3']
+        assert Server.queue == ['channel', 'msg1', 'msg2', 'msg3']
 
     def test_send_to_multiple(self):
         Server.send_to('chan1', 'msg1')
         Server.send_to('chan2', 'msg2')
         Server.send_to('chan3', 'msg3\nmsg4')
         assert Server.queue == [
-            '#chan1', 'msg1',
-            '#chan2', 'msg2',
-            '#chan3', 'msg3', 'msg4',
+            'chan1', 'msg1',
+            'chan2', 'msg2',
+            'chan3', 'msg3', 'msg4',
         ]
 
 
