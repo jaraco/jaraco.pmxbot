@@ -120,7 +120,10 @@ class Kiln(ChannelSelector):
 			"({repository[url]}) :".format(
 				number=len(commits), what=commit_s, **vars())
 		)
-		for commit in commits:
+		limit = 10
+		if len(commits) > limit:
+			yield "(last {limit})".format_map(locals())
+		for commit in commits[-10:]:
 			msg = commit['message'].splitlines()[0]
 			branch = commit.get('branch')
 			if branch is not None:

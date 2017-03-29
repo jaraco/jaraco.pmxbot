@@ -1,7 +1,12 @@
+3.14
+====
+
+Limit commit reports to 10.
+
 3.13
 ====
 
-Show commit's branch, too
+Show branches and tags for Kiln commits.
 
 3.12
 ====
