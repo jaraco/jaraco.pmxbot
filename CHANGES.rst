@@ -1,3 +1,8 @@
+3.16.1
+======
+
+Fixed usage of Twilio Client, unmentioned in the migration guide.
+
 3.16
 ====
 
