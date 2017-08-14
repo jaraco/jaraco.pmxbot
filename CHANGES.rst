@@ -1,3 +1,12 @@
+3.16
+====
+
+Fixed error where ``twilio.rest.TwilioRestClient`` was renamed
+to ``twilio.rest.Client`` (better name, to be sure) in v6 of the
+library. Reviewed the `migration guide
+<https://www.twilio.com/docs/libraries/python/migration-guide>`_
+and found no other relevant changes.
+
 3.15
 ====
 

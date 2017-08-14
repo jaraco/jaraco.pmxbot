@@ -25,7 +25,7 @@ params = dict(
 	namespace_packages=name.split('.')[:-1],
 	python_requires='>=2.7',
 	install_requires=[
-		'twilio',
+		'twilio>=6',
 		'cherrypy_cors',
 		'jaraco.itertools',
 		'inflect',
