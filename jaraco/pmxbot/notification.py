@@ -5,6 +5,9 @@ import pmxbot
 from pmxbot.core import command
 
 
+from_number = '+15712573984'
+
+
 @command()
 def send_text(rest):
 	"""
@@ -18,7 +21,7 @@ def send_text(rest):
 		return
 	msg = msg.encode('ascii')[:160]
 	client = twilio.rest.Client(account=account, token=token)
-	client.messages.create(to=number, from_="+15712573984", body=msg)
+	client.messages.create(to=number, from_=from_number, body=msg)
 	return "Sent {count} chars to {number}".format(
 		count=len(msg),
 		number=number,

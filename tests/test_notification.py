@@ -17,6 +17,7 @@ def twilio_test_credentials(monkeypatch):
 	monkeypatch.setitem(
 		pmxbot.config, 'twilio_token', 'd011e427bff04fdf56987aeb77aadeb4',
 	)
+	monkeypatch.setattr(notification, 'from_number', '+15005550006')
 
 
 def test_send_text(twilio_test_credentials):
