@@ -4,6 +4,7 @@ import twilio.rest
 import pmxbot
 from pmxbot.core import command
 
+
 @command()
 def send_text(client, event, channel, nick, rest):
 	"""
@@ -13,12 +14,16 @@ def send_text(client, event, channel, nick, rest):
 	token = pmxbot.config.twilio_token
 	number, _, msg = rest.partition(' ')
 	number = parse_number(number)
-	if not msg: return
+	if not msg:
+		return
 	msg = msg.encode('ascii')[:160]
 	client = twilio.rest.TwilioRestClient(account=account, token=token)
 	client.messages.create(to=number, from_="+15712573984", body=msg)
-	return "Sent {count} chars to {number}".format(count=len(msg),
-		number=number)
+	return "Sent {count} chars to {number}".format(
+		count=len(msg),
+		number=number,
+	)
+
 
 def parse_number(input_):
 	"""
