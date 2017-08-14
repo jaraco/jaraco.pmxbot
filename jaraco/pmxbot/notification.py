@@ -6,7 +6,7 @@ from pmxbot.core import command
 
 
 @command()
-def send_text(client, event, channel, nick, rest):
+def send_text(rest):
 	"""
 	Send an SMS message: pass the phone number and message to send.
 	"""
