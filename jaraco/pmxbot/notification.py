@@ -20,7 +20,7 @@ def send_text(rest):
 	if not msg:
 		return
 	msg = msg.encode('ascii')[:160]
-	client = twilio.rest.Client(account=account, token=token)
+	client = twilio.rest.Client(username=account, password=token)
 	client.messages.create(to=number, from_=from_number, body=msg)
 	return "Sent {count} chars to {number}".format(
 		count=len(msg),
