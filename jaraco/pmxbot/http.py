@@ -16,7 +16,6 @@ from jaraco.itertools import always_iterable
 import cherrypy
 import pmxbot.core
 import cherrypy_cors
-import inflect
 
 
 log = logging.getLogger(__name__)
@@ -97,87 +96,6 @@ class NewRelic(object):
 			"Alert! [{application_name} {severity}] {message} ({alert_url})"
 			.format(**kwargs)
 		)
-
-
-class Kiln(ChannelSelector):
-	"""
-	See payload format here:
-	http://help.fogcreek.com/8111/web-hooks-integrating-kiln-with-other-services#Custom_Web_Hooks
-	"""
-
-	@cherrypy.expose
-	def default(self, payload):
-		payload = json.loads(payload)
-		log.info("Received payload with %s", payload)
-		for channel in self.get_channels(payload['repository']['name']):
-			Server.send_to(channel, *self.format(**payload))
-		return "OK"
-
-	def format(self, commits, pusher, repository, **kwargs):
-		commit_s = inflect.engine().plural_noun('commit', len(commits))
-		tmpl = (
-			"{pusher[fullName]} pushed {number} {what} "
-			"to {repository[name]} "
-			"({repository[url]}):"
-		)
-		yield tmpl.format(number=len(commits), what=commit_s, **locals())
-		limit = 10
-		if len(commits) > limit:
-			yield "(last {limit})".format_map(locals())
-		for commit in commits[-10:]:
-			msg = commit['message'].splitlines()[0]
-			tags = '|'.join(commit.get('tags', []))
-			if tags:
-				msg = "[{tags}] ".format_map(locals()) + msg
-			yield msg
-
-
-class BitBucket(Kiln):
-	"""
-	Bitbucket has two models, the webhooks and the legacy POST service.
-	Legacy POST support is very similar to Kiln, so let its default
-	method handle that.
-	"""
-
-	@cherrypy.expose
-	@cherrypy.tools.json_in(debug=True, force=False)
-	def default(self, payload=None):
-		if payload:
-			return super(BitBucket, self).default(payload)
-
-		payload = cherrypy.request.json
-		log.info("Received Bitbucket webhook %s", payload)
-		user = payload['actor']['display_name']
-		canon_url = ''
-		repository = dict(
-			name=payload['repository']['name'],
-			absolute_url=payload['repository']['links']['html']['href'],
-		)
-		commits = [
-			change['new']['target']
-			for change in payload['push']['changes']
-			if change['new'] is not None
-		]
-		for channel in self.get_channels(payload['repository']['name']):
-			messages = self.format(
-				user=user,
-				commits=commits,
-				canon_url=canon_url,
-				repository=repository,
-			)
-			Server.send_to(channel, *messages)
-
-	def format(self, commits, canon_url, repository, user, **kwargs):
-		commit_s = inflect.engine().plural_noun('commit', len(commits))
-		tmpl = (
-			"{user} pushed {number} {what} "
-			"to {repository[name]} "
-			"({canon_url}{repository[absolute_url]}) :"
-		)
-
-		yield tmpl.format(number=len(commits), what=commit_s, **locals())
-		for commit in commits:
-			yield commit['message'].splitlines()[0]
 
 
 class FogbugzEventType(str):
@@ -355,10 +273,8 @@ class Server(object):
 	queue = []
 
 	new_relic = NewRelic()
-	kiln = Kiln()
 	jenkins = Jenkins()
 	fogbugz = FogBugz()
-	bitbucket = BitBucket()
 	velociraptor = Velociraptor()
 
 	@classmethod

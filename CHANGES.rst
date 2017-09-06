@@ -1,3 +1,10 @@
+4.0
+===
+
+Removed Kiln and Bitbucket hooks. As YouGov is no longer using
+these services, it's unlikely that anyone will need this code.
+It's there in the history if you want it.
+
 3.16.1
 ======
 
