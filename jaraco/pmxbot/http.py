@@ -351,7 +351,7 @@ def startup(*args, **kwargs):
 	if not pmxbot.config.get('web api', False):
 		return
 	Server.start()
-	pmxbot.core.FinalRegistry.at_exit(cherrypy.engine.stop)
+	pmxbot.core.FinalRegistry.at_exit(cherrypy.engine.exit)
 
 
 @pmxbot.core.execdelay("http", channel=None, howlong=0.3, repeat=True)

@@ -1,3 +1,8 @@
+4.0.1
+=====
+
+#3: Use ``cherrypy.engine.exit`` for cleaner exit of the webhooks.
+
 4.0
 ===
 
