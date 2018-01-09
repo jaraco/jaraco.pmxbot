@@ -1,21 +1,15 @@
-Plugins for `pmxbot <https://pypi.python.org/pypi/pmxbot>`_ by jaraco.
-
 .. image:: https://img.shields.io/pypi/v/jaraco.pmxbot.svg
    :target: https://pypi.org/project/jaraco.pmxbot
 
 .. image:: https://img.shields.io/pypi/pyversions/jaraco.pmxbot.svg
 
-.. image:: https://img.shields.io/pypi/dm/jaraco.pmxbot.svg
-
 .. image:: https://img.shields.io/travis/jaraco/jaraco.pmxbot/master.svg
    :target: http://travis-ci.org/jaraco/jaraco.pmxbot
 
-License
-=======
+.. image:: https://readthedocs.org/projects/jaracopmxbot/badge/?version=latest
+   :target: https://jaracopmxbot.readthedocs.io/en/latest/?badge=latest
 
-License is indicated in the project metadata (typically one or more
-of the Trove classifiers). For more details, see `this explanation
-<https://github.com/jaraco/skeleton/issues/1>`_.
+Plugins for `pmxbot <https://pypi.python.org/pypi/pmxbot>`_ by jaraco.
 
 Bookmarklet
 ===========
