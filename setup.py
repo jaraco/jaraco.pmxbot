@@ -34,21 +34,26 @@ params = dict(
 	python_requires='>=2.7',
 	install_requires=[
 		'twilio>=6',
-		'cherrypy_cors',
 		'jaraco.itertools',
 	],
 	extras_require={
 		'testing': [
-			'pytest>=2.8',
-			'pytest-sugar',
+			# upstream
+			'pytest>=3.5',
+			'pytest-sugar>=0.9.1',
 			'collective.checkdocs',
+			'pytest-flake8',
+
+			# local
 			'pmxbot',
-			'cherrypy[testing]',
 		],
 		'docs': [
+			# upstream
 			'sphinx',
 			'jaraco.packaging>=3.2',
 			'rst.linker>=1.9',
+
+			# local
 		],
 	},
 	setup_requires=[
