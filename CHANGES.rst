@@ -1,3 +1,9 @@
+5.0
+===
+
+Moved ``http API`` to `pmxbot.webhooks
+<https://pypi.org/project/pmxbot.webhooks>`_.
+
 4.0.1
 =====
 

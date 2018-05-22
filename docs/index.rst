@@ -12,6 +12,11 @@ Welcome to jaraco.pmxbot documentation!
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: jaraco.pmxbot.notification
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Indices and tables
 ==================
