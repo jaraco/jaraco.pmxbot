@@ -31,7 +31,7 @@ params = dict(
 		name.split('.')[:-1] if nspkg_technique == 'managed'
 		else []
 	),
-	python_requires='>=2.7',
+	python_requires='>=3.4',
 	install_requires=[
 		'twilio>=6',
 		'jaraco.itertools',
