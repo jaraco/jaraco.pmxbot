@@ -40,7 +40,7 @@ def parse_number(input_):
 	>>> parse_number('+44')
 	'+44'
 	"""
-	clean = ''.join(re.findall('[\d+]*', input_))
+	clean = ''.join(re.findall(r'[\d+]*', input_))
 	if not clean.startswith('+'):
 		clean = clean.lstrip('1')
 		clean = '+1' + clean
