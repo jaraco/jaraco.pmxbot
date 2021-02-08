@@ -1,3 +1,8 @@
+v6.1.0
+======
+
+Refresh package metadata.
+
 6.0
 ===
 
