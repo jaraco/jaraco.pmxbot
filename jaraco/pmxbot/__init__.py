@@ -4,5 +4,9 @@ from pmxbot.core import command
 
 
 @command("resolv", doc="resolve a hostname")
-def resolve(client, event, channel, nick, rest):
+def resolve(rest):
+    """
+    >>> resolve("localhost")
+    '...'
+    """
     return socket.getfqdn(rest)
