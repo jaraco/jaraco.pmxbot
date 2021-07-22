@@ -27,3 +27,7 @@ def twilio_test_credentials(monkeypatch):
 def test_send_text(twilio_test_credentials):
     res = notification.send_text(rest='+12026837967 <3 pmxbot')
     assert res == 'Sent 9 chars to +12026837967'
+
+
+def test_no_message(twilio_test_credentials):
+    assert not notification.send_text(rest='')
