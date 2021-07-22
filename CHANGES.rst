@@ -1,3 +1,8 @@
+v6.1.1
+======
+
+Refresh packaging.
+
 v6.1.0
 ======
 
