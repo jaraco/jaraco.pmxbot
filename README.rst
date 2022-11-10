@@ -1,10 +1,7 @@
 .. image:: https://img.shields.io/pypi/v/jaraco.pmxbot.svg
-   :target: `PyPI link`_
+   :target: https://pypi.org/project/jaraco.pmxbot
 
 .. image:: https://img.shields.io/pypi/pyversions/jaraco.pmxbot.svg
-   :target: `PyPI link`_
-
-.. _PyPI link: https://pypi.org/project/jaraco.pmxbot
 
 .. image:: https://github.com/jaraco/jaraco.pmxbot/workflows/tests/badge.svg
    :target: https://github.com/jaraco/jaraco.pmxbot/actions?query=workflow%3A%22tests%22
