@@ -30,15 +30,11 @@ Source = "https://github.com/jaraco/jaraco.pmxbot"
 test = [
 	# upstream
 	"pytest >= 6, != 8.1.*",
-	"pytest-checkdocs >= 2.4",
-	"pytest-cov",
-	"pytest-mypy",
-	"pytest-enabler >= 2.2",
-	"pytest-ruff >= 0.2.1; sys_platform != 'cygwin'",
 
 	# local
 	"pmxbot",
 ]
+
 doc = [
 	# upstream
 	"sphinx >= 3.5",
@@ -49,6 +45,27 @@ doc = [
 
 	# local
 ]
+
+check = [
+	"pytest-checkdocs >= 2.4",
+	"pytest-ruff >= 0.2.1; sys_platform != 'cygwin'",
+]
+
+cover = [
+	"pytest-cov",
+]
+
+enabler = [
+	"pytest-enabler >= 2.2",
+]
+
+type = [
+	# upstream
+	"pytest-mypy",
+
+	# local
+]
+
 
 [project.entry-points.pmxbot_handlers]
 "jaraco.pmxbot" = "jaraco.pmxbot"
