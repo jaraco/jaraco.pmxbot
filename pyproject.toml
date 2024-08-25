@@ -71,4 +71,9 @@ type = [
 "jaraco.pmxbot" = "jaraco.pmxbot"
 notification = "jaraco.pmxbot.notification"
 
+
 [tool.setuptools_scm]
+
+
+[tool.pytest-enabler.mypy]
+# Disabled due to jaraco/skeleton#143
