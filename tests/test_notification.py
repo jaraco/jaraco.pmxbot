@@ -1,13 +1,15 @@
-import pytest
-import pmxbot
-from jaraco.collections import ItemsAsAttributes
+from typing import Dict
 
+import pmxbot
+import pytest
+
+from jaraco.collections import ItemsAsAttributes
 from jaraco.pmxbot import notification
 
 
 @pytest.fixture
-def twilio_test_credentials(monkeypatch):
-    class ConfigDict(ItemsAsAttributes, dict):
+def twilio_test_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
+    class ConfigDict(ItemsAsAttributes, Dict[str, str]):
         pass
 
     monkeypatch.setattr(pmxbot, 'config', ConfigDict(), raising=False)
@@ -24,10 +26,12 @@ def twilio_test_credentials(monkeypatch):
     monkeypatch.setattr(notification, 'from_number', '+15005550006')
 
 
-def test_send_text(twilio_test_credentials):
+@pytest.mark.usefixtures("twilio_test_credentials")
+def test_send_text() -> None:
     res = notification.send_text(rest='+12026837967 <3 pmxbot')
     assert res == 'Sent 9 chars to +12026837967'
 
 
-def test_no_message(twilio_test_credentials):
+@pytest.mark.usefixtures("twilio_test_credentials")
+def test_no_message() -> None:
     assert not notification.send_text(rest='')
