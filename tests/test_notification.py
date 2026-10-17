@@ -1,5 +1,5 @@
-import pytest
 import pmxbot
+import pytest
 from jaraco.collections import ItemsAsAttributes
 
 from jaraco.pmxbot import notification
